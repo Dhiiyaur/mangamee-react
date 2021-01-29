@@ -1,24 +1,27 @@
-import logo from './logo.svg';
 import './App.css';
+import Navbar from "./component/Navbar";
+import Browse from "./component/Browse";
+import Search from "./component/Search";
+import MangaChapter from "./component/MangaChapter"
+import Manga from "./component/Manga"
+import Home from "./component/Home"
+
+import {BrowserRouter as Router, Switch, Route} from "react-router-dom"
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Mangamee
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <Router>
+      <div>
+        <Navbar />
+        <Switch>
+          <Route path="/" exact component={Home} />
+          <Route path="/browse" exact component={Browse} />
+          <Route path="/search" exact component={Search} />
+          <Route path='/:manga_tile' exact component={MangaChapter} />
+          <Route path='/:manga_tile/:chapter' exact component={Manga} />
+        </Switch>
+      </div>
+    </Router>
   );
 }
 
