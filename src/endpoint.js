@@ -1,4 +1,4 @@
-const MangameeBe = 'mangamee.herokuapp.com';
+const MangameeBe = 'https://mangamee.herokuapp.com';
 const apiURL = '/api';
 
 export const endpoint = `${MangameeBe}${apiURL}`;
