@@ -3,7 +3,7 @@ import { search } from "../endpoint";
 import axios from 'axios';
 import SearchField from 'react-search-field';
 import { Link as RouterLink } from "react-router-dom"
-
+import { createMuiTheme, ThemeProvider } from '@material-ui/core/styles';
 
 import {
     Grid,
@@ -20,6 +20,16 @@ import {
 
  } from '@material-ui/core'
 
+const theme = createMuiTheme({
+    typography: {
+      subtitle1: {
+        fontSize: 12,
+      },
+    },
+  });
+
+
+  
 export default function Search() {
 
     const [value, setValue] = useState("")
@@ -92,26 +102,26 @@ export default function Search() {
                 return(
                 <Grid item lg={2} xs={4}>
                     <Link underline='none' component={RouterLink} to={`/${item.link}`}>
+                    <ThemeProvider theme={theme}>
                     <Card style={{ height: '100%' }}>
                         <CardActionArea>
                         
 
                             <CardMedia
-                            // className={classes.media}
-                            // className={classes.media}
-                            component='img' src={item.thumbnail_image}
+                                component='img' src={item.thumbnail_image}
                             />
                             <CardContent>
-                            <Typography gutterBottom variant="h5" component="h2">
-                            {item.name}
+                            <Typography variant="subtitle1">
+                                {item.name}
                             </Typography>
-                            <Typography variant="body2" color="textSecondary" component="p">
-                            status : {item.status}
+                            <Typography variant="subtitle1">
+                                status : {item.status}
                             </Typography>
                             </CardContent>
 
                         </CardActionArea>
                     </Card>
+                    </ThemeProvider>
                     </Link>
         
                 </Grid>
