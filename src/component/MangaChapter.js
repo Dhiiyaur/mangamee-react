@@ -32,7 +32,11 @@ export default function MangaChapter() {
         summary : null
     })
 
-
+    const handleImageError = (e) => {
+        e.target.onerror = null;
+        // e.target.style.display = 'none'
+        e.target.src = ""
+    }
     useEffect(() => {
 
         let mounted = true;
@@ -87,7 +91,7 @@ export default function MangaChapter() {
                         
                         <Card style={{ height: '100%' }}>
                             <CardActionArea>
-                                <CardMedia component='img' src={info.cover_img} />
+                                <CardMedia component='img' src={info.cover_img} onError={handleImageError}/>
                                 <CardContent>
                                 <Typography variant="h6" component="h6">
                                 summary

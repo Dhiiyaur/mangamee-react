@@ -38,7 +38,11 @@ export default function Search() {
     const [value, setValue] = useState("")
     const [searchResult, setSearchResult] = useState([])
     const [loading, setLoading] = useState(false)
-    
+    const handleImageError = (e) => {
+        e.target.onerror = null;
+        // e.target.style.display = 'none'
+        e.target.src = ""
+    }
     const handleSumbit = e => {
 
         e.preventDefault();
@@ -124,7 +128,9 @@ export default function Search() {
                         
 
                             <CardMedia
-                                component='img' src={item.thumbnail_image}
+                                component='img' 
+                                src={item.thumbnail_image}
+                                onError={handleImageError}
                             />
                             <CardContent>
                             <Typography variant="subtitle1">

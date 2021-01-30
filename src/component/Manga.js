@@ -19,6 +19,12 @@ export default function Manga() {
     const { chapter } = useParams()
     const [loading, setLoading] = useState(true)
 
+    const handleImageError = (e) => {
+        e.target.onerror = null;
+        // e.target.style.display = 'none'
+        e.target.src = ""
+    }
+
     useEffect(() => {
 
         let mounted = true;
@@ -63,7 +69,7 @@ export default function Manga() {
                         {list.map(item =>{
                             return(
  
-                                <CardMedia component='img' src={item.image} />
+                                <CardMedia component='img' src={item.image} onError={handleImageError}/>
 
                         )})}
                         

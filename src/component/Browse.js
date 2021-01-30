@@ -30,7 +30,11 @@ export default function Browse() {
 
     const [list, setList] = useState([]);
     const [loading, setLoading] = useState(true)
-
+    const handleImageError = (e) => {
+        e.target.onerror = null;
+        // e.target.style.display = 'none'
+        e.target.src = ""
+    }
     useEffect(() => {
 
         let mounted = true;
@@ -79,7 +83,9 @@ export default function Browse() {
                                         <CardMedia
                                         // className={classes.media}
                                         // className={classes.media}
-                                        component='img' src={item.thumbnail_image}
+                                        component='img' 
+                                        src={item.thumbnail_image} 
+                                        onError={handleImageError}
                                         />
                                         <CardContent>
                                         <Typography variant="subtitle1">
