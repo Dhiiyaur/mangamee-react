@@ -14,6 +14,7 @@ import {
     CardMedia,
     Typography,
     Link,
+    CircularProgress
 
  } from '@material-ui/core'
 
@@ -28,6 +29,7 @@ const theme = createMuiTheme({
 export default function Browse() {
 
     const [list, setList] = useState([]);
+    const [loading, setLoading] = useState(true)
 
     useEffect(() => {
 
@@ -38,6 +40,7 @@ export default function Browse() {
             if(mounted){
                 console.log(res.data)
                 setList(res.data)
+                setLoading(false)
             }
         })
 
@@ -57,6 +60,11 @@ export default function Browse() {
     return (
         <div>
             <Container>
+                <Grid container spacing={3} m={2} justify='center' style={{ marginTop : 80 }}>
+                    {loading && (
+                        <CircularProgress color="secondary"/>
+                    )}
+                </Grid>
                 <Grid container spacing={3} justify='center' style={{ marginTop : 20 }}>
                     {list.map(item =>{
                         return(

@@ -16,9 +16,12 @@ import {
     Link,
     TextField,
     Button,
-    Divider
+    Divider,
+    CircularProgress
 
  } from '@material-ui/core'
+
+
 
 const theme = createMuiTheme({
     typography: {
@@ -34,6 +37,7 @@ export default function Search() {
 
     const [value, setValue] = useState("")
     const [searchResult, setSearchResult] = useState([])
+    const [loading, setLoading] = useState(false)
     
     const handleSumbit = e => {
 
@@ -45,6 +49,8 @@ export default function Search() {
         // masukin ke addTask
         console.log(value);
         // lalu set 'empty' lagi buat valuenya
+        setSearchResult([])
+        setLoading(true)
         fetchData();
 
         setValue('');
@@ -60,6 +66,7 @@ export default function Search() {
         .then((res) =>{
             console.log(res.data);
             setSearchResult(res.data);
+            setLoading(false)
         })
     }
 
@@ -79,7 +86,7 @@ export default function Search() {
                         onChange = {e => setValue(e.target.value)}
                         
                     />
-                    
+                    <br/>
                     <Button
                         type="submit"
                         variant='contained'
@@ -96,7 +103,16 @@ export default function Search() {
                 
                 </Grid>
 
+
+
             <Grid container spacing={3} m={2} justify='center' style={{ marginTop : 20 }}>
+
+            <Grid container spacing={3} m={2} justify='center' style={{ marginTop : 80 }}>
+                {loading && (
+                    <CircularProgress color="secondary"/>
+                )}
+            </Grid>
+
             <Divider /> 
             {searchResult.map(item =>{
                 return(

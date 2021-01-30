@@ -17,6 +17,7 @@ import {
     List,
     ListItemText,
     Divider,
+    CircularProgress
 
  } from '@material-ui/core'
 
@@ -24,6 +25,7 @@ import {
 export default function MangaChapter() {
 
     const { manga_tile } = useParams()
+    const [loading, setLoading] = useState(true)
     const [chapter, setChapter] = useState([])
     const [info, setInfo] = useState({
         cover_img : null,
@@ -51,6 +53,7 @@ export default function MangaChapter() {
                     summary:res.data.summary,
                     title:res.title    
                 })
+                setLoading(false)
                 
             }
         })
@@ -71,6 +74,12 @@ export default function MangaChapter() {
     return (
         <div>
             <Container>
+
+                <Grid container spacing={3} m={2} justify='center' style={{ marginTop : 80 }}>
+                    {loading && (
+                        <CircularProgress color="secondary"/>
+                    )}
+                </Grid>
 
                 <Grid container spacing={3} m={2} justify='center' style={{ marginTop : 20 }}>
 
