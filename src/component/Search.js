@@ -1,9 +1,10 @@
 import React, { useState } from 'react'
 import { search } from "../endpoint";
 import axios from 'axios';
-import SearchField from 'react-search-field';
 import { Link as RouterLink } from "react-router-dom"
 import { createMuiTheme, ThemeProvider } from '@material-ui/core/styles';
+import SearchIcon from '@material-ui/icons/Search';
+// import { makeStyles } from '@material-ui/core/styles';
 
 import {
     Grid,
@@ -21,7 +22,25 @@ import {
 
  } from '@material-ui/core'
 
+import Radio from '@material-ui/core/Radio';
+import RadioGroup from '@material-ui/core/RadioGroup';
+import FormControlLabel from '@material-ui/core/FormControlLabel';
 
+
+// const useStyles = makeStyles(theme => ({
+//     paperRoot: {
+//       backgroundColor: 'red',
+//       height: 45,
+//       width: 50
+
+//     },
+//     searchIconTheme: {
+//         '& svg': {
+//             height: 45,
+//             width: 50
+//         }
+//       }
+// }));
 
 const theme = createMuiTheme({
     typography: {
@@ -35,14 +54,23 @@ const theme = createMuiTheme({
   
 export default function Search() {
 
-    const [value, setValue] = useState("")
+    const [value, setValue] = useState('')
+    const [langvalue, setLangvalue] = useState('ENG')
     const [searchResult, setSearchResult] = useState([])
     const [loading, setLoading] = useState(false)
+    // const classes = useStyles();
+
     const handleImageError = (e) => {
         e.target.onerror = null;
         // e.target.style.display = 'none'
         e.target.src = ""
     }
+
+    const handleLang = (event) => {
+        setLangvalue(event.target.value);
+      };
+
+
     const handleSumbit = e => {
 
         e.preventDefault();
@@ -52,6 +80,7 @@ export default function Search() {
 
         // masukin ke addTask
         console.log(value);
+        console.log(langvalue)
         // lalu set 'empty' lagi buat valuenya
         setSearchResult([])
         setLoading(true)
@@ -64,6 +93,8 @@ export default function Search() {
     const fetchData = () =>{
         axios.get(search, {
             params:{
+
+                lang:langvalue,
                 manga_title:value
             }
         })
@@ -90,14 +121,20 @@ export default function Search() {
                         onChange = {e => setValue(e.target.value)}
                         
                     />
-                    <br/>
+                    {/* <br/> */}
                     <Button
+        
                         type="submit"
                         variant='contained'
-                        color='primary'
-                        onClick={handleSumbit}
-                    > search 
+                        onClick={handleSumbit} 
+                    >
+                    <SearchIcon fontSize='large'/>
                     </Button>
+                    <br/>
+                    <RadioGroup value={langvalue} style={{display:'initial'}} onChange={handleLang}> 
+                        <FormControlLabel value="EN" control={<Radio />} label="ENG" />
+                        <FormControlLabel value="ID" control={<Radio />} label="IND" />
+                    </RadioGroup>
                 </form>
                 {/* </FormControl> */}
                     {/* <SearchField 
@@ -121,9 +158,9 @@ export default function Search() {
             {searchResult.map(item =>{
                 return(
                 <Grid item lg={2} xs={4}>
-                    <Link underline='none' component={RouterLink} to={`/${item.link}`}>
+                    <Link underline='none' component={RouterLink} to={`/${langvalue}/${item.link}`}>
                     <ThemeProvider theme={theme}>
-                    <Card style={{ height: '100%' }}>
+                    <Card style={{ height: '100%' }} key={item.id}>
                         <CardActionArea>
                         
 
@@ -137,7 +174,7 @@ export default function Search() {
                                 {item.name}
                             </Typography>
                             <Typography variant="subtitle1">
-                                status : {item.status}
+                               {item.latest_chapter} chapter - {item.status}
                             </Typography>
                             </CardContent>
 

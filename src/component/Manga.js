@@ -15,8 +15,8 @@ export default function Manga() {
 
 
     const [list, setList] = useState([]);
-    const { manga_tile } = useParams()
-    const { chapter } = useParams()
+    const { lang, chapter, manga_tile } = useParams()
+    // const { chapter } = useParams()
     const [loading, setLoading] = useState(true)
 
     const handleImageError = (e) => {
@@ -30,6 +30,8 @@ export default function Manga() {
         let mounted = true;
         axios.get(page, {
             params:{
+
+                lang:lang,
                 manga_title:manga_tile,
                 chapter:chapter
             }

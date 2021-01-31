@@ -76,7 +76,7 @@ export default function Browse() {
 
                             {/* <Card className={classes.root} style={{ height: '100%' }}> */}
                             
-                            <Link underline='none' component={RouterLink} to={`/${item.link}`}>
+                            <Link underline='none' component={RouterLink} to={`/EN/${item.link}`}>
                             <ThemeProvider theme={theme}>
                                 <Card style={{ height: '100%' }}>
                                     <CardActionArea>

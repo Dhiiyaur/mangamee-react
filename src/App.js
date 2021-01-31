@@ -17,8 +17,8 @@ function App() {
           <Route path="/" exact component={Home} />
           <Route path="/browse" exact component={Browse} />
           <Route path="/search" exact component={Search} />
-          <Route path='/:manga_tile' exact component={MangaChapter} />
-          <Route path='/:manga_tile/:chapter' exact component={Manga} />
+          <Route path='/:lang/:manga_tile' exact component={MangaChapter} />
+          <Route path='/:lang/:manga_tile/:chapter' exact component={Manga} />
         </Switch>
       </div>
     </Router>

@@ -24,7 +24,7 @@ import {
  
 export default function MangaChapter() {
 
-    const { manga_tile } = useParams()
+    const { lang, manga_tile } = useParams()
     const [loading, setLoading] = useState(true)
     const [chapter, setChapter] = useState([])
     const [info, setInfo] = useState({
@@ -42,6 +42,8 @@ export default function MangaChapter() {
         let mounted = true;
         axios.get(manga, {
             params:{
+
+                lang:lang,
                 manga_title:manga_tile
             }
         })
@@ -57,6 +59,7 @@ export default function MangaChapter() {
                     summary:res.data.summary,
                     title:res.title    
                 })
+                console.log(res.data.chapters)
                 setLoading(false)
                 
             }
@@ -108,7 +111,7 @@ export default function MangaChapter() {
                                             
                                                 <ListItem button>
                                                     {/* <Link to={`/${manga_tile}/${item.chapter_name}`}> */}
-                                                    <Link underline='none' component={RouterLink} to={`/${manga_tile}/${item.chapter_name}`}>
+                                                    <Link underline='none' component={RouterLink} to={`/${lang}/${manga_tile}/${item.link}`}>
                                                         <ListItemText primary={item.chapter_name} />
                                                     </Link>
                                                 </ListItem>
