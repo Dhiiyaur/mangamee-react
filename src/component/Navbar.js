@@ -125,8 +125,9 @@ export default function PrimarySearchAppBar() {
       open={isMenuOpen}
       onClose={handleMenuClose}
     >
-      <MenuItem onClick={handleMenuClose}>Profile</MenuItem>
-      <MenuItem onClick={handleMenuClose}>My account</MenuItem>
+      <MenuItem onClick={() => { window.location.href='/auth/signin'}}>
+        Login 
+      </MenuItem>
     </Menu>
   );
 
