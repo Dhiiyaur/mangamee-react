@@ -1,5 +1,6 @@
 import React, { useState} from 'react'
 import axios from 'axios';
+import { apiRegister } from "../endpoint";
 
 import { 
     Avatar,
@@ -39,17 +40,35 @@ const useStyles = makeStyles((theme) => ({
 export default function SignUp() {
 
     const classes = useStyles();
-    const { handleSubmit, control, errors } = useForm();
+    const { handleSubmit, control } = useForm();
     const [formError, setformError] = useState(false)
+    const [registerError, setRegisterError] = useState(false)
 
     const onSubmitRegister = data => {
 
-        
-        console.log(data)
+        // console.log(data)
         if(data.password1 != data.password2){
-            console.log('ga sama')
+        
             setformError(true)
         }
+
+        axios.post(apiRegister,{
+
+            username : data.username,
+            email    : data.email,
+            password : data.password1
+        })
+
+        .then((res) => {
+            // console.log(res.data)
+            window.location.href='/auth/signin/'
+
+        })
+
+        .catch(error => {
+            // console.log(error.response)
+            setRegisterError(true)
+        })
     } 
 
     return (
@@ -111,6 +130,13 @@ export default function SignUp() {
                             required: 'Required'
                         }}
                     />
+
+                    {registerError && (
+                        <Typography color='error'>
+                            Email already exist
+                        </Typography>
+                    )}
+
                     <Controller
                         name='password1'
                         as={

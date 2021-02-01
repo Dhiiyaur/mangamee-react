@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import axios from 'axios';
-import { page } from "../endpoint";
+import { apiPage } from "../endpoint";
 import { useParams } from "react-router-dom"
 
 import {
@@ -28,7 +28,7 @@ export default function Manga() {
     useEffect(() => {
 
         let mounted = true;
-        axios.get(page, {
+        axios.get(apiPage, {
             params:{
 
                 lang:lang,
@@ -39,7 +39,7 @@ export default function Manga() {
 
         .then(res =>{
             if(mounted){
-                console.log(res.data)
+                // console.log(res.data)
                 setList(res.data)
                 setLoading(false)
             }

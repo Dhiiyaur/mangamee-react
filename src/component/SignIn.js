@@ -1,5 +1,6 @@
-import React from 'react'
+import React, { useState } from 'react'
 import axios from 'axios';
+import { apiLogin } from "../endpoint";
 
 import { 
     Avatar,
@@ -43,22 +44,34 @@ export default function SignIn() {
 
     const classes = useStyles();
     const { handleSubmit, control, errors: fieldsErrors, reset } = useForm();
+    const [loginError, setloginError] = useState(false)
+    const cookies = new Cookies()
+
     const onSubmitLogin = data => {
 
-        console.log(data['email'])
-        // console.log(data['password'])
-        axios.post('http://127.0.0.1:8000/api/auth/',{
+        axios.post(apiLogin,{
 
-            email   : data['email'],
-            passowrd: data['password']
+            email   : data.email,
+            password: data.password
         })
         .then((res) => {
-            console.log(res.data)
-            
+            // console.log(res.data)
+            // console.log(res.data.token)
+            let date = new Date(2030, 12)
+            cookies.set("Mangamee_Login_Token", res.data.token, { path: "/", expires: date })
+            window.location.href='/'
+
         })
 
-    }
+        .catch(error => {
+            // console.log(error.response)
+            setloginError(true)
+        })
     
+        
+    }
+
+
     return (
         <div>
             
@@ -122,7 +135,13 @@ export default function SignIn() {
                         required: 'Required'
                       }}
                 />
-
+                
+                {loginError && (
+                    <Typography color='error'>
+                        Account not found
+                    </Typography>
+                )}
+                
                 <Button
                     type="submit"
                     fullWidth

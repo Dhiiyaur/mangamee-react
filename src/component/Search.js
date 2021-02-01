@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { search } from "../endpoint";
+import { apiSearch } from "../endpoint";
 import axios from 'axios';
 import { Link as RouterLink } from "react-router-dom"
 import { createMuiTheme, ThemeProvider } from '@material-ui/core/styles';
@@ -79,8 +79,8 @@ export default function Search() {
         if (!value) return;
 
         // masukin ke addTask
-        console.log(value);
-        console.log(langvalue)
+        // console.log(value);
+        // console.log(langvalue)
         // lalu set 'empty' lagi buat valuenya
         setSearchResult([])
         setLoading(true)
@@ -91,7 +91,7 @@ export default function Search() {
     }
 
     const fetchData = () =>{
-        axios.get(search, {
+        axios.get(apiSearch, {
             params:{
 
                 lang:langvalue,
@@ -99,7 +99,7 @@ export default function Search() {
             }
         })
         .then((res) =>{
-            console.log(res.data);
+            // console.log(res.data);
             setSearchResult(res.data);
             setLoading(false)
         })

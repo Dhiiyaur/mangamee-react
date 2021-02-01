@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react'
-
-import { manga } from "../endpoint";
+import { apiManga } from "../endpoint";
 import axios from 'axios'
 import { useParams, Link as RouterLink } from "react-router-dom"
 
@@ -40,7 +39,7 @@ export default function MangaChapter() {
     useEffect(() => {
 
         let mounted = true;
-        axios.get(manga, {
+        axios.get(apiManga, {
             params:{
 
                 lang:lang,
@@ -59,7 +58,7 @@ export default function MangaChapter() {
                     summary:res.data.summary,
                     title:res.title    
                 })
-                console.log(res.data.chapters)
+                // console.log(res.data.chapters)
                 setLoading(false)
                 
             }

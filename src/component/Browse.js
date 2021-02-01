@@ -1,5 +1,5 @@
 import React, { useEffect, useState} from 'react'
-import { browse } from "../endpoint";
+import { apiBrowse } from "../endpoint";
 import axios from 'axios'
 import { Link as RouterLink } from "react-router-dom"
 import { createMuiTheme, ThemeProvider } from '@material-ui/core/styles';
@@ -38,11 +38,11 @@ export default function Browse() {
     useEffect(() => {
 
         let mounted = true;
-        axios.get(browse)
+        axios.get(apiBrowse)
 
         .then(res =>{
             if(mounted){
-                console.log(res.data)
+                // console.log(res.data)
                 setList(res.data)
                 setLoading(false)
             }
