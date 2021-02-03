@@ -1,4 +1,4 @@
-const MangameeBe = 'https://mangamee.herokuapp.com';
+const MangameeBe = 'https://be-mangamee.herokuapp.com';
 const MangameeBeLocal = 'http://127.0.0.1:8000';
 
 
