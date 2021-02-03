@@ -96,8 +96,9 @@ export default function PrimarySearchAppBar() {
 
   function deleteToken(){
 
-    // console.log('asdasdadasdasdasd')
-    cookies.remove("Mangamee_Login_Token")
+    cookies.remove("Mangamee_Login_Token" ,{ path: '/' })
+    cookies.remove("Mangamee_Temp_History" ,{ path: '/' })
+    cookies.remove("Mangamee_Temp_Name" ,{ path: '/' })
     window.location.href='/'
 
   }

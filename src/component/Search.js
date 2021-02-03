@@ -2,9 +2,8 @@ import React, { useState } from 'react'
 import { apiSearch } from "../endpoint";
 import axios from 'axios';
 import { Link as RouterLink } from "react-router-dom"
-import { createMuiTheme, ThemeProvider } from '@material-ui/core/styles';
-import SearchIcon from '@material-ui/icons/Search';
-// import { makeStyles } from '@material-ui/core/styles';
+import { makeStyles } from '@material-ui/core/styles';
+import Cookies from 'universal-cookie';
 
 import {
     Grid,
@@ -16,86 +15,47 @@ import {
     Typography,
     Link,
     TextField,
-    Button,
-    Divider,
-    CircularProgress
+    CircularProgress,
+    CssBaseline
 
  } from '@material-ui/core'
 
-import Radio from '@material-ui/core/Radio';
-import RadioGroup from '@material-ui/core/RadioGroup';
-import FormControlLabel from '@material-ui/core/FormControlLabel';
+import ToggleButton from '@material-ui/lab/ToggleButton';
+import ToggleButtonGroup from '@material-ui/lab/ToggleButtonGroup';
+import { useForm, Controller } from 'react-hook-form';
 
-
-// const useStyles = makeStyles(theme => ({
-//     paperRoot: {
-//       backgroundColor: 'red',
-//       height: 45,
-//       width: 50
-
-//     },
-//     searchIconTheme: {
-//         '& svg': {
-//             height: 45,
-//             width: 50
-//         }
-//       }
-// }));
-
-const theme = createMuiTheme({
-    typography: {
-      subtitle1: {
-        fontSize: 12,
-      },
+const cookies = new Cookies()
+const useStyles = makeStyles((theme) => ({
+    paper: {
+      marginTop: theme.spacing(6),
+      display: 'flex',
+      flexDirection: 'column',
+      alignItems: 'center',
     },
-  });
-
-
+    form: {
+      width: '100%', // Fix IE 11 issue.
+      marginTop: theme.spacing(1),
+    },
+    root: {
+        maxWidth: 345,
+    },
+  }));
   
 export default function Search() {
 
-    const [value, setValue] = useState('')
-    const [langvalue, setLangvalue] = useState('ENG')
+    const classes = useStyles();
     const [searchResult, setSearchResult] = useState([])
     const [loading, setLoading] = useState(false)
-    // const classes = useStyles();
+    const [langOption, setLangOption] = useState('EN');
+    const { handleSubmit, control, errors: fieldsErrors, reset } = useForm();
 
-    const handleImageError = (e) => {
-        e.target.onerror = null;
-        // e.target.style.display = 'none'
-        e.target.src = ""
-    }
-
-    const handleLang = (event) => {
-        setLangvalue(event.target.value);
-      };
-
-
-    const handleSumbit = e => {
-
-        e.preventDefault();
-
-        // jika ga ada value return
-        if (!value) return;
-
-        // masukin ke addTask
-        // console.log(value);
-        // console.log(langvalue)
-        // lalu set 'empty' lagi buat valuenya
-        setSearchResult([])
-        setLoading(true)
-        fetchData();
-
-        setValue('');
-
-    }
-
-    const fetchData = () =>{
+    function fetchData(title, langOption) {
+        
         axios.get(apiSearch, {
             params:{
 
-                lang:langvalue,
-                manga_title:value
+                lang:langOption,
+                manga_title:title
             }
         })
         .then((res) =>{
@@ -105,45 +65,68 @@ export default function Search() {
         })
     }
 
+    const handleLangSelect = (event, newLang) => {
+        setLangOption(newLang);
+    };
+
+    const onSubmitLogin = data => {
+
+        console.log(data)
+        console.log(langOption)
+        setLoading(true)
+        fetchData(data.title_manga, langOption);
+        
+    }
+
+
     return (
         <div>
             <Container>
 
-                <Grid container spacing={3} m={2} justify='center' style={{ marginTop : 50 }}>
-                <form onSubmit = {handleSumbit}>
-                {/* <FormControl onSubmit = {handleSumbit}> */}
-                    <TextField
-                        variant='outlined'
-                        color='primary'
-                        label='Manga Title'
-                        size='medium'
-                        value = {value}
-                        onChange = {e => setValue(e.target.value)}
-                        
-                    />
-                    {/* <br/> */}
-                    <Button
-        
-                        type="submit"
-                        variant='contained'
-                        onClick={handleSumbit} 
-                    >
-                    <SearchIcon fontSize='large'/>
-                    </Button>
-                    <br/>
-                    <RadioGroup value={langvalue} style={{display:'initial'}} onChange={handleLang}> 
-                        <FormControlLabel value="EN" control={<Radio />} label="ENG" />
-                        <FormControlLabel value="ID" control={<Radio />} label="IND" />
-                    </RadioGroup>
-                </form>
-                {/* </FormControl> */}
-                    {/* <SearchField 
-                        placeholder='Manga Title'
-                        // onEnter={onEnter}
-                    /> */}
-                
-                </Grid>
+                <Container component="main" maxWidth="xs">
+                <CssBaseline />
+                <div className={classes.paper}>
+                <form className={classes.form} onSubmit={handleSubmit(onSubmitLogin)}>
+                    <Controller
+                        name='title_manga'
+                        as={
 
+                            <TextField
+                            variant="outlined"
+                            margin="normal"
+                            required
+                            fullWidth
+                            id="title_manga"
+                            label="Manga Title"
+                            name="title_manga"
+                            autoFocus      
+                        />
+                    }
+                        control={control}
+                        defaultValue=""
+                        rules={{
+                            required: 'Required'
+                        }}
+
+                    />
+
+                <ToggleButtonGroup
+                        value={langOption}
+                        exclusive
+                        onChange={handleLangSelect}
+                        aria-label="lang selected"
+                    >
+                    <ToggleButton value="EN" aria-label="left aligned">
+                        ENG
+                    </ToggleButton>
+                    <ToggleButton value="ID" aria-label="centered">
+                        IND
+                    </ToggleButton>
+                    </ToggleButtonGroup>
+
+                </form>
+                </div>
+                </Container>
 
 
             <Grid container spacing={3} m={2} justify='center' style={{ marginTop : 20 }}>
@@ -154,35 +137,40 @@ export default function Search() {
                 )}
             </Grid>
 
-            <Divider /> 
             {searchResult.map(item =>{
                 return(
                 <Grid item lg={2} xs={4}>
-                    <Link underline='none' component={RouterLink} to={`/${langvalue}/${item.link}`}>
-                    <ThemeProvider theme={theme}>
-                    <Card style={{ height: '100%' }} key={item.id}>
-                        <CardActionArea>
+                        <Card className={classes.root} style={{ height: '100%' }}>
+                            <div onClick={() => {
+                            
+                                let MangeName = item.name
+                                let date = new Date(2030, 12)
+                                cookies.set("Mangamee_Temp_Name", MangeName, { path: "/", expires: date })
                         
-
+                            }}>
+                            <CardActionArea>
+                            <Link underline='none' component={RouterLink} to={`/${langOption}/${item.link}`}>
                             <CardMedia
-                                component='img' 
+                                component="img"
+                                alt=" "
+                                height="180"
                                 src={item.thumbnail_image}
-                                onError={handleImageError}
+                                title="manga title"
                             />
                             <CardContent>
-                            <Typography variant="subtitle1">
-                                {item.name}
-                            </Typography>
-                            <Typography variant="subtitle1">
-                               {item.latest_chapter} chapter - {item.status}
-                            </Typography>
+                                <Typography variant="body2" color="textPrimary" component="p">
+                                    {item.name}
+                                </Typography>
+                                <br/>
+                                <Typography variant="body2" color="textSecondary" component="p">
+                                    {item.latest_chapter} chapter - {item.status}
+                                </Typography>
                             </CardContent>
-
-                        </CardActionArea>
-                    </Card>
-                    </ThemeProvider>
-                    </Link>
-        
+                            </Link>
+                            </CardActionArea>
+                            </div>
+                        </Card>
+                    
                 </Grid>
 
             )})}
@@ -191,3 +179,5 @@ export default function Search() {
         </div>
     )
 }
+
+

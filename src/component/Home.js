@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import axios from 'axios';
-import { apiHistory } from "../endpoint";
+import { apiUpdateHistory, apiGetHistory, apiDeleteHistory } from "../endpoint";
 
 import {
     Grid,
@@ -11,33 +11,33 @@ import {
     CardMedia,
     Typography,
     Link,
-    TextField,
     Button,
-    Divider,
-    CircularProgress
 
  } from '@material-ui/core'
 
 import { Link as RouterLink } from "react-router-dom"
-import { createMuiTheme, ThemeProvider } from '@material-ui/core/styles';
 import Cookies from 'universal-cookie';
+import { makeStyles } from '@material-ui/core/styles';
+import CardActions from '@material-ui/core/CardActions';
 
 const cookies = new Cookies()
-
-const theme = createMuiTheme({
-    typography: {
-      subtitle1: {
-        fontSize: 12,
-      },
+const useStyles = makeStyles((theme) => ({
+    paper: {
+      marginTop: theme.spacing(6),
+      display: 'flex',
+      flexDirection: 'column',
+      alignItems: 'center',
     },
-  });
-
+    root: {
+        maxWidth: 345,
+    },
+  }));
 
 export default function Home() {
 
     const [userHistory, setUserHistory] = useState([])
     const [isLogin, setisLogin] = useState(false)
-    const [isnull, setisnull] = useState(false)
+    const classes = useStyles();
 
     useEffect(() => {
 
@@ -45,85 +45,165 @@ export default function Home() {
 
     }, [])
 
+    function UpdateDbUser(userHistory) {
+
+        let token = cookies.get("Mangamee_Login_Token");
+        
+        axios.post(apiUpdateHistory,{
+
+            token   : token,
+            history : userHistory
+            
+        })
+        .then((res) => {
+            
+            console.log(res.status)
+            if(res.status === 200){
+
+                window.location.href='/'
+            }
+            
+        })
+        
+    }
+
+    function DeleteDbUser() {
+        
+        let token = cookies.get("Mangamee_Login_Token");
+        
+        axios.post(apiDeleteHistory,{
+
+            token   : token,
+            
+        })
+        .then((res) => {
+            
+            console.log(res.status)
+            if(res.status === 200){
+
+                window.location.href='/'
+            }
+            
+        })
+    }
+
     function tokenCheck(){
 
         let userToken = cookies.get("Mangamee_Login_Token");
         // console.log(cookies.get("Mangamee_Login_Token"))
+        console.log(userToken)
     
         if(userToken != undefined){
     
-            fetchHistory();
+            fetchHistory(userToken);
             setisLogin(true)
     
         }
     
       }
 
-    function fetchHistory(){
+    function fetchHistory(userToken){
 
-        axios.post(apiHistory,{
+        axios.post(apiGetHistory,{
     
-          token   : cookies.get("Mangamee_Login_Token")
+          token   : userToken
     
         })
         .then((res) => {
-        //   console.log(res.data.history)
-          if(res.data.history != null){
 
+            console.log(res.data.history)
             setUserHistory(res.data.history)
-          }
-          
+            let date = new Date(2030, 12)
+            cookies.set("Mangamee_Temp_History", res.data.history, { path: "/", expires: date })        
+        })
+        .catch(error => {
+            // console.log(error.response)
+            console.log(error)
         })
     
     
       }
 
-    const handleImageError = (e) => {
-        e.target.onerror = null;
-        // e.target.style.display = 'none'
-        e.target.src = ""
-    }
-
     const userHistoryCard = (
 
         <div>
         {isLogin && (
-            
 
-            <Grid container spacing={3} m={2} justify='center' style={{ marginTop : 20 }}>
-
-            {userHistory.map(item =>{
-                return(
-                <Grid item lg={2} xs={4}>
-                    {/* <Link underline='none' component={RouterLink} to={`/${langvalue}/${item.link}`}> */}
-                    <ThemeProvider theme={theme}>
-                    <Card style={{ height: '100%' }} key={item.id}>
-                        <CardActionArea>
+            <div>
+                <Grid 
+                    container 
+                    spacing={3} m={2} 
+                    direction="column" 
+                    alignItems="center" 
+                    justify='center' 
+                    style={{ marginTop : 70 }} >
                         
-
-                            <CardMedia
-                                component='img' 
-                                src={item.cover_img}
-                                onError={handleImageError}
-                            />
-                            <CardContent>
-                            <Typography variant="subtitle1">
-                                {item.name}
+                <Typography variant="body2" color="textSecondary" component="h6" Ca>
+                        History
+                </Typography>
+                {userHistory.map(item =>{
+                
+                return(
+                    <Grid item lg={2} xs={4}>
+                    <Card className={classes.root} style={{ height: '100%' }}>
+                        <CardActionArea>
+                        <Link underline='none' component={RouterLink} to={`/${item.Lang}/${item.ID}`}>
+                        <CardMedia
+                            component="img"
+                            alt=" "
+                            height="180"
+                            src={item.CoverImg}
+                            title="manga title"
+                        />
+                        <CardContent>
+                            <Typography variant="body2" color="textSecondary" component="p">
+                                {item.Name}
                             </Typography>
-                            <Typography variant="subtitle1">
-                                Last read {item.latest} 
+                            <Typography variant="body2" color="textSecondary" component="p">
+                                {item.LatestRead}
                             </Typography>
-                            </CardContent>
-
+                        </CardContent>
+                        </Link>
                         </CardActionArea>
+                        <CardActions>
+                        
+                            <div onClick={() => {
+                                
+                                let tempHistory = cookies.get("Mangamee_Temp_History");
+                                // get target data
+                                let mangaIDCookies = item.ID
+                                let date = new Date(2030, 12)
+                                // filter with mangaNameCookies
+
+                                if(tempHistory.length == 1){
+
+                                    cookies.remove("Mangamee_Temp_History" ,{ path: '/' })
+                                    DeleteDbUser()
+
+                                    
+                            
+                                }else{
+                            
+                                    let cookiesFilter = tempHistory.filter((item) => item.ID != mangaIDCookies);
+                                    // console.log(cookiesFilter)
+                                    cookies.set("Mangamee_Temp_History", cookiesFilter, { path: "/", expires: date })
+                                    UpdateDbUser(cookiesFilter)
+                                    
+                                    
+                            
+                                }
+                            }}>
+                            <Button size="small" color="secondary">
+                            Delete
+                            </Button>
+                            </div>
+                        </CardActions>
                     </Card>
-                    </ThemeProvider>
-                    {/* </Link> */}
-
+                    </Grid>
+                )})}
                 </Grid>
-
-            )})}
-            </Grid>
+            </div>  
+                
         )}
         </div>
     )
@@ -132,7 +212,7 @@ export default function Home() {
         <div>
             <Container>
                 <Grid container spacing={3} m={2} justify='center' style={{ marginTop : 50 }}>
-                <Typography >
+                <Typography variant="h4" color="textPrimary" component="h4">
                     Mangamee
                 </Typography>
                 </Grid>

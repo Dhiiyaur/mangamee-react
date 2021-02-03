@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react'
 import axios from 'axios';
-import { apiPage } from "../endpoint";
+import { apiPage, apiUpdateHistory } from "../endpoint";
 import { useParams } from "react-router-dom"
-
+import Cookies from 'universal-cookie';
 import {
     Grid,
     Container,
@@ -11,6 +11,7 @@ import {
 
  } from '@material-ui/core'
 
+const cookies = new Cookies()
 export default function Manga() {
 
 
@@ -24,6 +25,40 @@ export default function Manga() {
         // e.target.style.display = 'none'
         e.target.src = ""
     }
+
+    function UpdateDbUser(userHistory) {
+
+        let token = cookies.get("Mangamee_Login_Token");
+        
+        axios.post(apiUpdateHistory,{
+
+            token   : token,
+            history : userHistory
+            
+        })
+    }
+
+
+    function updateCookiesChapter(){
+
+        // get data
+        let MangaID = manga_tile
+        let lastChapter = chapter
+        let TempHistory = cookies.get("Mangamee_Temp_History");
+
+        // update chapter .map cookies
+    
+        let newChapter = TempHistory.map(obj =>
+            obj.ID === MangaID ? { ...obj, LatestRead: lastChapter } : obj
+        );
+    
+        // jsonvalue
+        console.log(newChapter)
+        let date = new Date(2030, 12)
+        cookies.set("Mangamee_Temp_History", newChapter, { path: "/", expires: date })
+        UpdateDbUser(newChapter)
+    }
+    
 
     useEffect(() => {
 
@@ -41,6 +76,7 @@ export default function Manga() {
             if(mounted){
                 // console.log(res.data)
                 setList(res.data)
+                updateCookiesChapter()
                 setLoading(false)
             }
         })

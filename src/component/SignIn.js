@@ -54,6 +54,7 @@ export default function SignIn() {
             email   : data.email,
             password: data.password
         })
+        
         .then((res) => {
             // console.log(res.data)
             // console.log(res.data.token)

@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react'
-import { apiManga } from "../endpoint";
+import { apiManga, apiUpdateHistory } from "../endpoint";
 import axios from 'axios'
 import { useParams, Link as RouterLink } from "react-router-dom"
+import Cookies from 'universal-cookie';
 
 import {
     Grid,
@@ -20,25 +21,20 @@ import {
 
  } from '@material-ui/core'
 
- 
+const cookies = new Cookies()
 export default function MangaChapter() {
 
+    // const classes = useStyles();
     const { lang, manga_tile } = useParams()
     const [loading, setLoading] = useState(true)
     const [chapter, setChapter] = useState([])
     const [info, setInfo] = useState({
-        cover_img : null,
-        summary : null
+        cover_img   : null,
+        summary     : null
     })
 
-    const handleImageError = (e) => {
-        e.target.onerror = null;
-        // e.target.style.display = 'none'
-        e.target.src = ""
-    }
-    useEffect(() => {
-
-        let mounted = true;
+    function FetchManga() {
+        
         axios.get(apiManga, {
             params:{
 
@@ -48,7 +44,7 @@ export default function MangaChapter() {
         })
 
         .then(res =>{
-            if(mounted){
+        
                 // console.log(res.data.chapters)
                 // console.log(res.data.cover_img)
                 // console.log(res.data.summary)
@@ -58,22 +54,113 @@ export default function MangaChapter() {
                     summary:res.data.summary,
                     title:res.title    
                 })
+                
+                CreateOrUpdate(res.data.cover_img)
                 // console.log(res.data.chapters)
                 setLoading(false)
                 
-            }
         })
 
-        // async function fetchData(){
-        //     const browseData = await axios.get(browse);
-        //     if(mounted){
-        //         console.log(browseData.data)
-        //         setList(browseData.data)
-        //     }
-        // }
+    }
 
-        // fetchData()
-        // return () => mounted = false;
+    function UpdateDbUser(userHistory) {
+
+        let token = cookies.get("Mangamee_Login_Token");
+        
+        axios.post(apiUpdateHistory,{
+
+            token   : token,
+            history : userHistory
+            
+        })
+    }
+
+    function CreateOrUpdate(coverImg) {
+
+        let userToken = cookies.get("Mangamee_Login_Token");
+        let tempHistory = cookies.get("Mangamee_Temp_History");
+
+        console.log(userToken)
+
+        if(userToken != undefined){
+
+
+            if(tempHistory == undefined){
+
+                // creaate his
+                console.log('ga ada history')
+                CreateCookies(coverImg)
+
+            }else{
+
+                // update history
+                console.log('ada history')
+                console.log(tempHistory)
+                UpdateCookies(tempHistory, coverImg)
+                   
+            }    
+        }
+    }
+
+
+    function CreateCookies(coverImg){
+
+        let tempName = cookies.get("Mangamee_Temp_Name");
+
+        let userHistory = [
+            {
+                ID : manga_tile,
+                Lang : lang,
+                Name : tempName,
+                CoverImg : coverImg,
+                LatestRead : '-'
+            }
+        ]
+        
+        let date = new Date(2030, 12)
+        cookies.set("Mangamee_Temp_History", userHistory, { path: "/", expires: date })
+        UpdateDbUser(userHistory)
+
+    }
+
+    function UpdateCookies(tempHistory, coverImg) {
+
+        let userHistory = tempHistory
+        let tempName = cookies.get("Mangamee_Temp_Name");
+        // checking manga is input or not if, ga da, tambahin data,if ada, update
+
+        let checkName = manga_tile
+        let findName = userHistory.find((item) =>{
+            return item.ID === checkName
+        })
+
+        console.log(userHistory)
+
+        if(findName === undefined){
+            
+            userHistory.push(
+                
+                {
+                    ID : manga_tile,
+                    Lang : lang,
+                    Name : tempName,
+                    CoverImg : coverImg,
+                    LatestRead : '-'
+
+                }
+            )
+
+            let date = new Date(2030, 12)
+            cookies.set("Mangamee_Temp_History", userHistory, { path: "/", expires: date })
+            UpdateDbUser(userHistory)
+        }
+    }
+
+    useEffect(() => {
+
+        FetchManga()
+       
+
     }, [])
 
 
@@ -81,50 +168,56 @@ export default function MangaChapter() {
         <div>
             <Container>
 
+            {loading && (
                 <Grid container spacing={3} m={2} justify='center' style={{ marginTop : 80 }}>
-                    {loading && (
-                        <CircularProgress color="secondary"/>
-                    )}
+                    <CircularProgress color="secondary"/>
                 </Grid>
+            )}
+
+            {!loading && (
 
                 <Grid container spacing={3} m={2} justify='center' style={{ marginTop : 20 }}>
-
                     <Grid item lg={12} xs={12}>
-                        
-                        <Card style={{ height: '100%' }}>
-                            <CardActionArea>
-                                <CardMedia component='img' src={info.cover_img} onError={handleImageError}/>
-                                <CardContent>
-                                <Typography variant="h6" component="h6">
-                                summary
-                                </Typography>
-                                <br/>
-                                <Typography variant="body2" color="textSecondary" component="p">
+                    <Card style={{ height: '100%' }}>
+                        <CardActionArea>
+                        <CardMedia
+                            component="img"
+                            alt=" "
+                            // height='60%'
+                            src={info.cover_img}
+                            title="manga title"
+                        />
+                        <CardContent>
+                            <Typography variant="h6" component="h6">
+                                 summary
+                            </Typography>
+                            <br />
+                            <Typography variant="body2" color="textSecondary" component="p">
                                 {info.summary}
-                                </Typography>
-                                <br/>
-                                <Divider />
-                                    <List>
-                                        {chapter.map(item =>{   
-                                            return(
-                                            
-                                                <ListItem button>
-                                                    {/* <Link to={`/${manga_tile}/${item.chapter_name}`}> */}
-                                                    <Link underline='none' component={RouterLink} to={`/${lang}/${manga_tile}/${item.link}`}>
-                                                        <ListItemText primary={item.chapter_name} />
-                                                    </Link>
-                                                </ListItem>
-                                            
-                                        )})}
-                                    </List>
-                                </CardContent>
-                            </CardActionArea>
-                        </Card>
-
+                            </Typography>
+                            <br />
+                            <Divider />
+                            <List>
+                                {chapter.map(item =>{   
+                                    return(
+                                    
+                                    <ListItem button>
+                                        <Link underline='none' component={RouterLink} to={`/${lang}/${manga_tile}/${item.link}`}>
+                                            <ListItemText primary={item.chapter_name} />
+                                        </Link>
+                                    </ListItem>
+                                    
+                                )})}
+                            </List>
+                        </CardContent>
+                        </CardActionArea>
+                    </Card>
                     </Grid>
                 </Grid>
-
+            )}
             </Container>
         </div>
     )
 }
+
+
