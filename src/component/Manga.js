@@ -97,12 +97,14 @@ export default function Manga() {
     return (
         <div>
             <Container>
+                
+                {loading && (
+                    <Grid container spacing={3} m={2} justify='center' style={{ marginTop : 100 }}>
+                    <CircularProgress color="secondary"/>
+                    </Grid>
+                )}
+                
                 <Grid container spacing={3} m={2} justify='center' style={{ marginTop : 80 }}>
-                    {loading && (
-                        <CircularProgress color="secondary"/>
-                    )}
-                </Grid>
-                <Grid container spacing={3} m={2} justify='center' style={{ marginTop : 20 }}>
                     <Grid item lg={12} xs={12}>
                         {list.map(item =>{
                             return(

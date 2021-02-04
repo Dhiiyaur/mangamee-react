@@ -169,14 +169,14 @@ export default function MangaChapter() {
             <Container>
 
             {loading && (
-                <Grid container spacing={3} m={2} justify='center' style={{ marginTop : 80 }}>
+                <Grid container spacing={3} m={2} justify='center' style={{ marginTop : 150 }}>
                     <CircularProgress color="secondary"/>
                 </Grid>
             )}
 
             {!loading && (
 
-                <Grid container spacing={3} m={2} justify='center' style={{ marginTop : 20 }}>
+                <Grid container spacing={3} m={2} justify='center' style={{ marginTop : 100 }}>
                     <Grid item lg={12} xs={12}>
                     <Card style={{ height: '100%' }}>
                         <CardActionArea>

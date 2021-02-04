@@ -19,11 +19,17 @@ import {
 
 import { makeStyles } from '@material-ui/core/styles';
 
-const useStyles = makeStyles({
+const useStyles = makeStyles((theme) => ({
     root: {
         maxWidth: 345,
-},
-});
+    },
+    mobileText:{
+
+    [theme.breakpoints.down("xs")]: {
+        fontSize: 12
+    }
+    }
+    }))
 
 export default function Browse() {
 
@@ -61,12 +67,12 @@ export default function Browse() {
 
         <div>
             <Container>
-            <Grid container spacing={3} m={2} justify='center' style={{ marginTop : 80 }}>
+            <Grid container spacing={3} m={2} justify='center' style={{ marginTop : 100 }}>
                 {loading && (
                     <CircularProgress color="secondary"/>
                 )}
             </Grid>
-            <Grid container spacing={3} m={2} justify='center' style={{ marginTop : 20 }}>
+            <Grid container spacing={3} m={2} justify='center' style={{ marginTop : 70 }}>
             {list.map(item =>{
             
                 return(
@@ -82,7 +88,7 @@ export default function Browse() {
                         title="manga title"
                     />
                     <CardContent>
-                        <Typography variant="body2" color="textSecondary" component="p">
+                        <Typography variant="body2" color="textSecondary" component="p" className={classes.mobileText}>
                             {item.name}
                         </Typography>
                     </CardContent>

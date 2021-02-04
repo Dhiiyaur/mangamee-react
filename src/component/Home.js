@@ -30,7 +30,14 @@ const useStyles = makeStyles((theme) => ({
     },
     root: {
         maxWidth: 345,
+
     },
+    mobileText:{
+
+        [theme.breakpoints.down("xs")]: {
+            fontSize: 12
+        }
+    }
   }));
 
 export default function Home() {
@@ -130,22 +137,23 @@ export default function Home() {
         {isLogin && (
 
             <div>
+                <Grid container style={{ marginTop : 70 }} justify='center'>
+                    <Typography variant="body2" color="textSecondary" component="h6">
+                            History
+                    </Typography>
+                </Grid>
                 <Grid 
                     container 
-                    spacing={3} m={2} 
-                    direction="column" 
-                    alignItems="center" 
+                    spacing={3} m={2}
                     justify='center' 
-                    style={{ marginTop : 70 }} >
+                    style={{ marginTop : 10 }} >
                         
-                <Typography variant="body2" color="textSecondary" component="h6" Ca>
-                        History
-                </Typography>
+
                 {userHistory.map(item =>{
                 
                 return(
-                    <Grid item lg={2} xs={4}>
-                    <Card className={classes.root} style={{ height: '100%' }}>
+                    <Grid item lg={2} xs={4} >
+                    <Card className={classes.root} style={{ height: '100%'}}>
                         <CardActionArea>
                         <Link underline='none' component={RouterLink} to={`/${item.Lang}/${item.ID}`}>
                         <CardMedia
@@ -156,10 +164,10 @@ export default function Home() {
                             title="manga title"
                         />
                         <CardContent>
-                            <Typography variant="body2" color="textSecondary" component="p">
+                            <Typography variant="body2" color="textSecondary" component="p" className={classes.mobileText}>
                                 {item.Name}
                             </Typography>
-                            <Typography variant="body2" color="textSecondary" component="p">
+                            <Typography variant="body2" color="textSecondary" component="p" className={classes.mobileText}>
                                 {item.LatestRead}
                             </Typography>
                         </CardContent>
@@ -193,8 +201,8 @@ export default function Home() {
                             
                                 }
                             }}>
-                            <Button size="small" color="secondary">
-                            Delete
+                            <Button size="small" color="secondary" className={classes.mobileText}>
+                                Delete
                             </Button>
                             </div>
                         </CardActions>
@@ -211,7 +219,7 @@ export default function Home() {
     return (
         <div>
             <Container>
-                <Grid container spacing={3} m={2} justify='center' style={{ marginTop : 50 }}>
+                <Grid container spacing={3} m={2} justify='center' style={{ marginTop : 150 }}>
                 <Typography variant="h4" color="textPrimary" component="h4">
                     Mangamee
                 </Typography>

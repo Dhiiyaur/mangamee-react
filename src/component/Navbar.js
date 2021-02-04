@@ -13,8 +13,11 @@ import {
 import AccountCircle from '@material-ui/icons/AccountCircle';
 import SearchIcon from '@material-ui/icons/Search';
 import MoreIcon from '@material-ui/icons/MoreVert';
+import MenuIcon from '@material-ui/icons/Menu';
 import MenuBookIcon from '@material-ui/icons/MenuBook';
 import HomeIcon from '@material-ui/icons/Home';
+import useScrollTrigger from "@material-ui/core/useScrollTrigger";
+import Slide from "@material-ui/core/Slide";
 
 
 import Cookies from 'universal-cookie';
@@ -50,6 +53,8 @@ const useStyles = makeStyles((theme) => ({
 const cookies = new Cookies()
 
 export default function PrimarySearchAppBar() {
+
+  const trigger = useScrollTrigger();
   const classes = useStyles();
   const [anchorEl, setAnchorEl] = React.useState(null);
   const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = React.useState(null);
@@ -194,7 +199,8 @@ export default function PrimarySearchAppBar() {
 
   return (
     <div className={classes.grow}>
-      <AppBar position="static">
+      <Slide appear={false} direction="down" in={!trigger}>
+      <AppBar>
         <Toolbar>
           <Typography className={classes.title} variant="h6" noWrap>
             Mangamee
@@ -238,11 +244,12 @@ export default function PrimarySearchAppBar() {
               onClick={handleMobileMenuOpen}
               color="inherit"
             >
-              <MoreIcon />
+              <MenuIcon />
             </IconButton>
           </div>
         </Toolbar>
       </AppBar>
+      </Slide>
       {renderMobileMenu}
       {renderMenuLogin}
     </div>
