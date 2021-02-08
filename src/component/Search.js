@@ -16,7 +16,9 @@ import {
     Link,
     TextField,
     CircularProgress,
-    CssBaseline
+    CssBaseline,
+    Paper,
+    Box
 
  } from '@material-ui/core'
 
@@ -24,10 +26,12 @@ import ToggleButton from '@material-ui/lab/ToggleButton';
 import ToggleButtonGroup from '@material-ui/lab/ToggleButtonGroup';
 import { useForm, Controller } from 'react-hook-form';
 
+import {MuiThemeProvider, createMuiTheme } from '@material-ui/core'
+
 const cookies = new Cookies()
 const useStyles = makeStyles((theme) => ({
     paper: {
-      marginTop: theme.spacing(6),
+      marginTop: theme.spacing(0),
       display: 'flex',
       flexDirection: 'column',
       alignItems: 'center',
@@ -44,7 +48,12 @@ const useStyles = makeStyles((theme) => ({
         [theme.breakpoints.down("xs")]: {
             fontSize: 12
         }
+    },
+    buttonColor: {
+        "&.Mui-selected": {
+          backgroundColor: "red"
         }
+      }
   }));
   
 export default function Search() {
@@ -55,6 +64,14 @@ export default function Search() {
     const [notFound, setnotFound] = useState(false)
     const [langOption, setLangOption] = useState('EN');
     const { handleSubmit, control, errors: fieldsErrors, reset } = useForm();
+
+    const theme = createMuiTheme({
+        palette:{
+
+            type:'dark'
+        }
+
+    })
 
     function fetchData(title, langOption) {
         
@@ -96,7 +113,7 @@ export default function Search() {
     return (
         <div>
             <Container>
-
+                <MuiThemeProvider theme={theme}>
                 <Container component="main" maxWidth="xs" style={{ marginTop : 120 }}>
                 <CssBaseline />
                 <div className={classes.paper}>
@@ -106,7 +123,7 @@ export default function Search() {
                         as={
 
                             <TextField
-                            variant="outlined"
+                            variant="filled"
                             margin="normal"
                             required
                             fullWidth
@@ -130,10 +147,10 @@ export default function Search() {
                         onChange={handleLangSelect}
                         aria-label="lang selected"
                     >
-                    <ToggleButton value="EN" aria-label="left aligned">
+                    <ToggleButton value="EN" aria-label="left aligned" className={classes.buttonColor}>
                         ENG
                     </ToggleButton>
-                    <ToggleButton value="ID" aria-label="centered">
+                    <ToggleButton value="ID" aria-label="centered" className={classes.buttonColor}>
                         IND
                     </ToggleButton>
                     </ToggleButtonGroup>
@@ -206,7 +223,7 @@ export default function Search() {
                     )}
                     </div>
                 )}
- 
+            </MuiThemeProvider>
             </Container>
         </div>
     )

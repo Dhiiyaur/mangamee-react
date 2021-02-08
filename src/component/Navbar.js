@@ -200,7 +200,7 @@ export default function PrimarySearchAppBar() {
   return (
     <div className={classes.grow}>
       <Slide appear={false} direction="down" in={!trigger}>
-      <AppBar>
+      <AppBar style={{ background: '#2E3B55' }}>
         <Toolbar>
           <Typography className={classes.title} variant="h6" noWrap>
             Mangamee

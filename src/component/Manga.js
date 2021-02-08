@@ -76,7 +76,11 @@ export default function Manga() {
             if(mounted){
                 // console.log(res.data)
                 setList(res.data)
-                updateCookiesChapter()
+                if(console.log(cookies.get("Mangamee_Login_Token")) !== undefined){
+                    updateCookiesChapter()
+                    setLoading(false)
+                }
+                
                 setLoading(false)
             }
         })
@@ -105,7 +109,7 @@ export default function Manga() {
                 )}
                 
                 <Grid container spacing={3} m={2} justify='center' style={{ marginTop : 80 }}>
-                    <Grid item lg={12} xs={12}>
+                    <Grid item lg={8} xs={12}>
                         {list.map(item =>{
                             return(
  

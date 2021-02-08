@@ -12,13 +12,17 @@ import {
     Typography,
     Link,
     Button,
+    Paper,
+    Box
 
  } from '@material-ui/core'
 
 import { Link as RouterLink } from "react-router-dom"
 import Cookies from 'universal-cookie';
-import { makeStyles } from '@material-ui/core/styles';
+import { createMuiTheme, makeStyles } from '@material-ui/core/styles';
 import CardActions from '@material-ui/core/CardActions';
+
+import {MuiThemeProvider} from '@material-ui/core'
 
 const cookies = new Cookies()
 const useStyles = makeStyles((theme) => ({
@@ -45,6 +49,15 @@ export default function Home() {
     const [userHistory, setUserHistory] = useState([])
     const [isLogin, setisLogin] = useState(false)
     const classes = useStyles();
+
+
+    const theme = createMuiTheme({
+        palette:{
+
+            type:'dark'
+        }
+
+    })
 
     useEffect(() => {
 
@@ -139,7 +152,7 @@ export default function Home() {
             <div>
                 <Grid container style={{ marginTop : 70 }} justify='center'>
                     <Typography variant="body2" color="textSecondary" component="h6">
-                            History
+                            User History
                     </Typography>
                 </Grid>
                 <Grid 
@@ -219,12 +232,17 @@ export default function Home() {
     return (
         <div>
             <Container>
+                <MuiThemeProvider theme={theme}>
                 <Grid container spacing={3} m={2} justify='center' style={{ marginTop : 150 }}>
-                <Typography variant="h4" color="textPrimary" component="h4">
-                    Mangamee
+                {/* <Paper variant='outlined' component={Box} p={2}> */}
+                <Typography variant="h4" component="h4" color='textPrimary'>
+                    MANGAMEE
                 </Typography>
+                {/* </Paper> */}
                 </Grid>
+                
                 {userHistoryCard}
+                </MuiThemeProvider>
             </Container>
             
         </div>

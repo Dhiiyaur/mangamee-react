@@ -11,6 +11,8 @@ import {
     Link,
     Grid,
     Typography,
+    Paper,
+    Box
 
 } from "@material-ui/core";
 
@@ -19,10 +21,11 @@ import { makeStyles } from '@material-ui/core/styles';
 import { useForm, Controller } from 'react-hook-form';
 import Cookies from 'universal-cookie';
 
+import {MuiThemeProvider, createMuiTheme } from '@material-ui/core'
 
 const useStyles = makeStyles((theme) => ({
     paper: {
-      marginTop: theme.spacing(8),
+      marginTop: theme.spacing(1),
       display: 'flex',
       flexDirection: 'column',
       alignItems: 'center',
@@ -34,6 +37,7 @@ const useStyles = makeStyles((theme) => ({
     form: {
       width: '100%', // Fix IE 11 issue.
       marginTop: theme.spacing(1),
+      
     },
     submit: {
       margin: theme.spacing(3, 0, 2),
@@ -46,6 +50,14 @@ export default function SignIn() {
     const { handleSubmit, control, errors: fieldsErrors, reset } = useForm();
     const [loginError, setloginError] = useState(false)
     const cookies = new Cookies()
+
+    const theme = createMuiTheme({
+        palette:{
+
+            type:'dark'
+        }
+
+    })
 
     const onSubmitLogin = data => {
 
@@ -75,14 +87,14 @@ export default function SignIn() {
 
     return (
         <div>
-            
-            <Container component="main" maxWidth="xs">
+            <MuiThemeProvider theme={theme}>
+            <Container component="main" maxWidth="xs" style={{ marginTop : 200 }}>
             <CssBaseline />
             <div className={classes.paper}>
                 <Avatar className={classes.avatar}>
                 <LockOutlinedIcon />
                 </Avatar>
-                <Typography component="h1" variant="h5">
+                <Typography component="h1" variant="h5" color="textPrimary">
                 Sign in
                 </Typography>
                 <form className={classes.form} onSubmit={handleSubmit(onSubmitLogin)}>
@@ -92,7 +104,7 @@ export default function SignIn() {
                     as={
 
                         <TextField
-                        variant="outlined"
+                        variant="filled"
                         margin="normal"
                         required
                         fullWidth
@@ -118,7 +130,7 @@ export default function SignIn() {
                     as={
 
                     <TextField
-                        variant="outlined"
+                        variant="filled"
                         margin="normal"
                         required
                         fullWidth
@@ -163,7 +175,8 @@ export default function SignIn() {
                 </Grid>
                 </form>
             </div>
-            </Container>        
+            </Container>
+            </MuiThemeProvider>
         </div>
     )
 }

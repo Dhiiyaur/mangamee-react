@@ -9,17 +9,19 @@ import {
     Container,
     TextField,
     Typography,
+    Paper,
+    Box
 
 } from "@material-ui/core";
 
 import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import { makeStyles } from '@material-ui/core/styles';
 import { useForm, Controller } from 'react-hook-form';
-
+import {MuiThemeProvider, createMuiTheme } from '@material-ui/core'
 
 const useStyles = makeStyles((theme) => ({
     paper: {
-      marginTop: theme.spacing(8),
+      marginTop: theme.spacing(1),
       display: 'flex',
       flexDirection: 'column',
       alignItems: 'center',
@@ -44,6 +46,13 @@ export default function SignUp() {
     const [formError, setformError] = useState(false)
     const [registerError, setRegisterError] = useState(false)
 
+    const theme = createMuiTheme({
+        palette:{
+
+            type:'dark'
+        }
+
+    })
     const onSubmitRegister = data => {
 
         // console.log(data)
@@ -73,8 +82,8 @@ export default function SignUp() {
 
     return (
         <div>
-
-            <Container component="main" maxWidth="xs">
+            <MuiThemeProvider theme={theme}>
+            <Container component="main" maxWidth="xs" style={{ marginTop : 120 }}>
                 <CssBaseline />
                 <div className={classes.paper}>
                     <Avatar className={classes.avatar}>
@@ -88,7 +97,7 @@ export default function SignUp() {
                         name='username'
                         as={
                             <TextField
-                                variant="outlined"
+                                variant="filled"
                                 margin="normal"
                                 required
                                 fullWidth
@@ -112,7 +121,7 @@ export default function SignUp() {
                         as={
 
                         <TextField
-                            variant="outlined"
+                            variant="filled"
                             margin="normal"
                             required
                             fullWidth
@@ -142,12 +151,12 @@ export default function SignUp() {
                         as={
 
                         <TextField
-                            variant="outlined"
+                            variant="filled"
                             margin="normal"
                             required
                             fullWidth
                             name="password1"
-                            label="password1"
+                            label="password"
                             type="password"
                             id="password1"
                             
@@ -164,12 +173,12 @@ export default function SignUp() {
                         as={
 
                         <TextField
-                            variant="outlined"
+                            variant="filled"
                             margin="normal"
                             required
                             fullWidth
                             name="password2"
-                            label="password2"
+                            label="confirm-password"
                             type="password"
                             id="password2"
                             
@@ -201,8 +210,8 @@ export default function SignUp() {
 
                     </form>
                 </div>
-
-                </Container>        
+                </Container>
+                </MuiThemeProvider>    
         </div>
     )
 }

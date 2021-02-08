@@ -177,7 +177,7 @@ export default function MangaChapter() {
             {!loading && (
 
                 <Grid container spacing={3} m={2} justify='center' style={{ marginTop : 100 }}>
-                    <Grid item lg={12} xs={12}>
+                    <Grid item lg={8} xs={12}>
                     <Card style={{ height: '100%' }}>
                         <CardActionArea>
                         <CardMedia
