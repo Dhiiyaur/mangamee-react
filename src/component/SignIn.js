@@ -11,8 +11,6 @@ import {
     Link,
     Grid,
     Typography,
-    Paper,
-    Box
 
 } from "@material-ui/core";
 

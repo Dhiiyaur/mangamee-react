@@ -21,6 +21,8 @@ import {
 
  } from '@material-ui/core'
 
+ import {MuiThemeProvider, createMuiTheme } from '@material-ui/core'
+
 const cookies = new Cookies()
 export default function MangaChapter() {
 
@@ -31,6 +33,14 @@ export default function MangaChapter() {
     const [info, setInfo] = useState({
         cover_img   : null,
         summary     : null
+    })
+
+    const theme = createMuiTheme({
+        palette:{
+
+            type:'dark'
+        }
+
     })
 
     function FetchManga() {
@@ -166,6 +176,7 @@ export default function MangaChapter() {
 
     return (
         <div>
+            <MuiThemeProvider theme={theme}>
             <Container>
 
             {loading && (
@@ -203,7 +214,7 @@ export default function MangaChapter() {
                                     
                                     <ListItem button>
                                         <Link underline='none' component={RouterLink} to={`/${lang}/${manga_tile}/${item.link}`}>
-                                            <ListItemText primary={item.chapter_name} />
+                                            <ListItemText style={{ color: '#FFFFFF' }} primary={item.chapter_name} />
                                         </Link>
                                     </ListItem>
                                     
@@ -216,6 +227,7 @@ export default function MangaChapter() {
                 </Grid>
             )}
             </Container>
+            </MuiThemeProvider>
         </div>
     )
 }

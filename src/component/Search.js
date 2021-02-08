@@ -17,8 +17,6 @@ import {
     TextField,
     CircularProgress,
     CssBaseline,
-    Paper,
-    Box
 
  } from '@material-ui/core'
 

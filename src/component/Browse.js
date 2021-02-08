@@ -2,7 +2,7 @@ import React, { useEffect, useState} from 'react'
 import { apiBrowse } from "../endpoint";
 import axios from 'axios'
 import { Link as RouterLink } from "react-router-dom"
-
+import {MuiThemeProvider, createMuiTheme } from '@material-ui/core'
 
 import {
     Grid,
@@ -37,6 +37,14 @@ export default function Browse() {
     const [loading, setLoading] = useState(true)
     const classes = useStyles();
 
+    const theme = createMuiTheme({
+        palette:{
+
+            type:'dark'
+        }
+
+    })
+
     useEffect(() => {
 
         let mounted = true;
@@ -55,10 +63,13 @@ export default function Browse() {
             if(mounted){
                 console.log(browseData.data)
                 setList(browseData.data)
+                setLoading(false)
+
             }
         }
 
         fetchData()
+        
         return () => mounted = false;
     }, [])
 
@@ -67,12 +78,13 @@ export default function Browse() {
 
         <div>
             <Container>
+            <MuiThemeProvider theme={theme}>
             <Grid container spacing={3} m={2} justify='center' style={{ marginTop : 100 }}>
                 {loading && (
                     <CircularProgress color="secondary"/>
                 )}
             </Grid>
-            <Grid container spacing={3} m={2} justify='center' style={{ marginTop : 70 }}>
+            <Grid container spacing={3} m={2} justify='center' style={{ marginTop : 40 }}>
             {list.map(item =>{
             
                 return(
@@ -98,6 +110,7 @@ export default function Browse() {
                 </Grid>
             )})}
             </Grid>
+            </MuiThemeProvider>
             </Container>
         </div>  
     )

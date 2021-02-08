@@ -12,8 +12,6 @@ import {
     Typography,
     Link,
     Button,
-    Paper,
-    Box
 
  } from '@material-ui/core'
 
