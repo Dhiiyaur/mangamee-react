@@ -19,7 +19,7 @@ import HomeIcon from '@material-ui/icons/Home';
 import useScrollTrigger from "@material-ui/core/useScrollTrigger";
 import Slide from "@material-ui/core/Slide";
 
-
+import {MuiThemeProvider, createMuiTheme } from '@material-ui/core'
 import Cookies from 'universal-cookie';
 
 
@@ -62,6 +62,13 @@ export default function PrimarySearchAppBar() {
   const isMenuOpen = Boolean(anchorEl);
   const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
 
+  const theme = createMuiTheme({
+    palette:{
+
+        type:'dark'
+    }
+
+  })
   const handleProfileMenuOpen = (event) => {
     setAnchorEl(event.currentTarget);
   };
@@ -198,6 +205,8 @@ export default function PrimarySearchAppBar() {
   }, [])
 
   return (
+
+    <MuiThemeProvider theme={theme}>
     <div className={classes.grow}>
       <Slide appear={false} direction="down" in={!trigger}>
       <AppBar style={{ background: '#2E3B55' }}>
@@ -253,5 +262,6 @@ export default function PrimarySearchAppBar() {
       {renderMobileMenu}
       {renderMenuLogin}
     </div>
+    </MuiThemeProvider>
   );
 }
