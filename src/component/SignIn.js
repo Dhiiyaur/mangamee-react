@@ -166,7 +166,7 @@ export default function SignIn() {
 
                 <Grid container>
                     <Grid item>
-                    <Link href="/auth/signup" variant="body2">
+                    <Link href="/auth/signup" variant="body2" color="inherit">
                         {"Don't have an account? Sign Up"}
                     </Link>
                     </Grid>

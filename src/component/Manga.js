@@ -46,22 +46,28 @@ export default function Manga() {
         let lastChapter = chapter
         let TempHistory = cookies.get("Mangamee_Temp_History");
 
+
         // update chapter .map cookies
-    
-        let newChapter = TempHistory.map(obj =>
-            obj.ID === MangaID ? { ...obj, LatestRead: lastChapter } : obj
-        );
-    
-        // jsonvalue
-        console.log(newChapter)
-        let date = new Date(2030, 12)
-        cookies.set("Mangamee_Temp_History", newChapter, { path: "/", expires: date })
-        UpdateDbUser(newChapter)
+        if(TempHistory != undefined){
+
+            let newChapter = TempHistory.map(obj =>
+                obj.ID === MangaID ? { ...obj, LatestRead: lastChapter } : obj
+            );
+        
+            // jsonvalue
+            console.log(newChapter)
+            let date = new Date(2030, 12)
+            cookies.set("Mangamee_Temp_History", newChapter, { path: "/", expires: date })
+            UpdateDbUser(newChapter)
+
+        }
+
     }
     
 
     useEffect(() => {
 
+        console.log('ini apaaan dah')
         let mounted = true;
         axios.get(apiPage, {
             params:{
@@ -76,25 +82,13 @@ export default function Manga() {
             if(mounted){
                 // console.log(res.data)
                 setList(res.data)
-                if(console.log(cookies.get("Mangamee_Login_Token")) !== undefined){
-                    updateCookiesChapter()
-                    setLoading(false)
-                }
-                
+
+                updateCookiesChapter()
                 setLoading(false)
+            
             }
         })
 
-        // async function fetchData(){
-        //     const browseData = await axios.get(browse);
-        //     if(mounted){
-        //         console.log(browseData.data)
-        //         setList(browseData.data)
-        //     }
-        // }
-
-        // fetchData()
-        // return () => mounted = false;
     }, [])
 
 
