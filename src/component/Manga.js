@@ -67,7 +67,7 @@ export default function Manga() {
 
     useEffect(() => {
 
-        console.log('ini apaaan dah')
+        // console.log('ini apaaan dah')
         let mounted = true;
         axios.get(apiPage, {
             params:{

@@ -109,7 +109,7 @@ export default function Home() {
 
         let userToken = cookies.get("Mangamee_Login_Token");
         // console.log(cookies.get("Mangamee_Login_Token"))
-        console.log(userToken)
+        // console.log(userToken)
     
         if(userToken != undefined){
     
@@ -129,11 +129,16 @@ export default function Home() {
         })
         .then((res) => {
 
-            console.log(res.data.history)
-            console.log(res.data)
-            setUserHistory(res.data.history)
-            let date = new Date(2030, 12)
-            cookies.set("Mangamee_Temp_History", res.data.history, { path: "/", expires: date })        
+            // console.log(res.data.history)
+            // console.log(res.data)
+            if(res.data.history != null){
+
+                setUserHistory(res.data.history)
+                let date = new Date(2030, 12)
+                cookies.set("Mangamee_Temp_History", res.data.history, { path: "/", expires: date })  
+
+            }
+      
         })
         .catch(error => {
             // console.log(error.response)

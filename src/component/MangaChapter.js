@@ -90,7 +90,7 @@ export default function MangaChapter() {
         let userToken = cookies.get("Mangamee_Login_Token");
         let tempHistory = cookies.get("Mangamee_Temp_History");
 
-        console.log(userToken)
+        // console.log(userToken)
 
         if(userToken != undefined){
 
@@ -98,13 +98,13 @@ export default function MangaChapter() {
             if(tempHistory == undefined){
 
                 // creaate his
-                console.log('ga ada history')
+                // console.log('ga ada history')
                 CreateCookies(coverImg)
 
             }else{
 
                 // update history
-                console.log('ada history')
+                // console.log('ada history')
                 console.log(tempHistory)
                 UpdateCookies(tempHistory, coverImg)
                    
