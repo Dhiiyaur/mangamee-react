@@ -10,7 +10,6 @@ import {
     CircularProgress
 
  } from '@material-ui/core'
- import Image from 'material-ui-image'
 
 const cookies = new Cookies()
 export default function Manga() {
@@ -109,10 +108,7 @@ export default function Manga() {
                             return(
  
                                 <CardMedia component='img' src={item.image} onError={handleImageError}/>
-                                // <Image
-                                //         src={item.image}
-                                //         disableError = 'true'
-                                // />
+   
                         )})}
                         
                     </Grid>
