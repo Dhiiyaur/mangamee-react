@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from 'react'
-import { apiManga, apiUpdateHistory } from "../endpoint";
+import { apiManga, apiUpdateHistory, apiPage } from "../endpoint";
 import axios from 'axios'
-import { useParams, Link as RouterLink } from "react-router-dom"
+import { useParams } from "react-router-dom"
 import Cookies from 'universal-cookie';
+import { makeStyles } from '@material-ui/core/styles';
+import LazyLoad from "react-lazyload";
 
 import {
     Grid,
@@ -12,7 +14,6 @@ import {
     CardContent,
     CardMedia,
     Typography,
-    Link,
     ListItem,
     List,
     ListItemText,
@@ -21,12 +22,36 @@ import {
 
  } from '@material-ui/core'
 
- import {MuiThemeProvider, createMuiTheme } from '@material-ui/core'
+import {MuiThemeProvider, createMuiTheme } from '@material-ui/core'
+
+// test server
+
+import Button from '@material-ui/core/Button';
+import Dialog from '@material-ui/core/Dialog';
+import AppBar from '@material-ui/core/AppBar';
+import Toolbar from '@material-ui/core/Toolbar';
+import IconButton from '@material-ui/core/IconButton';
+import CloseIcon from '@material-ui/icons/Close';
+import Slide from '@material-ui/core/Slide';
+
+
+// test
 
 const cookies = new Cookies()
+
+const useStyles = makeStyles((theme) => ({
+    appBar: {
+      position: 'relative',
+    },
+    title: {
+      marginLeft: theme.spacing(2),
+      flex: 1,
+    },
+  }));
+
 export default function MangaChapter() {
 
-    // const classes = useStyles();
+    const classes = useStyles();
     const { lang, manga_tile } = useParams()
     const [loading, setLoading] = useState(true)
     const [chapter, setChapter] = useState([])
@@ -34,6 +59,7 @@ export default function MangaChapter() {
         cover_img   : null,
         summary     : null
     })
+    
 
     const theme = createMuiTheme({
         palette:{
@@ -105,7 +131,7 @@ export default function MangaChapter() {
 
                 // update history
                 // console.log('ada history')
-                console.log(tempHistory)
+                // console.log(tempHistory)
                 UpdateCookies(tempHistory, coverImg)
                    
             }    
@@ -144,7 +170,7 @@ export default function MangaChapter() {
             return item.ID === checkName
         })
 
-        console.log(userHistory)
+        // console.log(userHistory)
 
         if(findName === undefined){
             
@@ -165,6 +191,139 @@ export default function MangaChapter() {
             UpdateDbUser(userHistory)
         }
     }
+
+    // manga func  ---------------------------------------------------------------------------------
+
+    const Transition = React.forwardRef(function Transition(props, ref) {
+        return <Slide direction="up" ref={ref} {...props} />;
+      });
+
+
+    const [open, setOpen] = useState({
+        mangaIndex : null,
+        mangaData : [],
+        isModalOpen : false
+    });
+
+    const [tempMangaID, settempMangaID] = useState(0)
+    const [loadingManga, setloadingManga] = useState(true)
+    
+    const fecthManga = (id) => {
+
+        axios.get(apiPage, {
+            params:{
+
+                lang:lang,
+                manga_title:manga_tile,
+                chapter:chapter[id].link
+            }
+        })
+        .then(res =>{
+
+                // console.log(res.data)
+                setOpen({
+                    mangaIndex : id,
+                    mangaData : res.data,
+                    isModalOpen : true
+                    
+                })
+        })
+
+        
+
+    }
+
+    function updateCookiesChapter(tempID){
+
+        // get data
+        let MangaID = manga_tile
+        console.log(tempMangaID)
+        let lastChapter = chapter[tempID].chapter_name
+        console.log(lastChapter)
+        let TempHistory = cookies.get("Mangamee_Temp_History");
+
+
+        // update chapter .map cookies
+        if(TempHistory != undefined){
+
+            let newChapter = TempHistory.map(obj =>
+                obj.ID === MangaID ? { ...obj, LatestRead: lastChapter } : obj
+            );
+        
+            // jsonvalue
+            console.log(newChapter)
+            let date = new Date(2030, 12)
+            cookies.set("Mangamee_Temp_History", newChapter, { path: "/", expires: date })
+            UpdateDbUser(newChapter)
+
+        }
+
+    }
+
+    const handleImageError = (e) => {
+        e.target.onerror = null;
+        e.target.style.display = 'none'
+        e.target.src = " "
+    }
+
+    const handleClickOpen = (id) => {
+
+        // console.log(chapter[id])
+        // console.log(chapter[id].chapter_name)
+
+        let tempID = id
+        settempMangaID(tempID)
+        fecthManga(tempID)
+        updateCookiesChapter(tempID)
+        setloadingManga(false)
+    };
+  
+    const handleClose = () => {
+
+      setOpen({
+
+            mangaIndex : null,
+            isModalOpen : false,
+            mangaData : [],
+      });
+    };
+
+    const handlePrev = () => {
+
+        console.log('prev')
+        setloadingManga(true)
+        let id = tempMangaID
+        // check with length chapter
+        if(id !== (chapter.length -1)){
+
+            
+            id = id + 1
+            settempMangaID(id)
+            // console.log(id)
+            fecthManga(id)
+            updateCookiesChapter(id)
+            
+        }
+        setloadingManga(false)
+    }
+
+    const handleNext = () => {
+
+        console.log('nrext')
+        setloadingManga(true)
+        let id = tempMangaID
+        if(id !== 0){
+
+            id = id - 1
+            settempMangaID(id)
+            // console.log(id)
+            fecthManga(id)
+            updateCookiesChapter(id)
+
+        }
+        setloadingManga(false)
+    }
+
 
     useEffect(() => {
 
@@ -209,20 +368,59 @@ export default function MangaChapter() {
                             <br />
                             <Divider />
                             <List>
-                                {chapter.map(item =>{   
-                                    return(
-                                    
-                                    <ListItem button>
-                                        <Link underline='none' component={RouterLink} to={`/${lang}/${manga_tile}/${item.link}`}>
-                                            <ListItemText style={{ color: '#FFFFFF' }} primary={item.chapter_name} />
-                                        </Link>
-                                    </ListItem>
-                                    
-                                )})}
-                            </List>
+                                {chapter.map((item, index) => (
+                        
+                                        <ListItem button>
+                                            <ListItemText style={{ color: '#FFFFFF' }} primary={item.chapter_name} onClick={e => handleClickOpen(index)}/>
+                                        </ListItem>
+
+                                ))}
+
+                            </List>   
                         </CardContent>
                         </CardActionArea>
                     </Card>
+                    
+                    <Dialog fullScreen open={open.isModalOpen} onClose={handleClose}>
+                        <AppBar>
+                        <Toolbar>
+                            <IconButton edge="start" color="inherit" onClick={handleClose} aria-label="close">
+                            <CloseIcon />
+                            </IconButton>
+                            <Typography variant="h6" className={classes.title}>
+                                {chapter[tempMangaID].chapter_name}
+                            </Typography>
+                            <Button autoFocus color="inherit" onClick={e => handlePrev()}>
+                            Prev
+                            </Button>
+                            <Button autoFocus color="inherit" onClick={e => handleNext()}>
+                            Next
+                            </Button>
+                        </Toolbar>
+                        </AppBar>
+
+                            {loadingManga && (
+                                <Grid container spacing={3} m={2} justify='center' style={{ marginTop : 150 }}>
+                                <CircularProgress color="secondary"/>
+                                </Grid>
+                            )}
+
+                            {!loadingManga && (
+                            <Grid container spacing={3} m={2} justify='center' style={{ marginTop : 100 }}>
+                                <Grid item lg={8} xs={12}>
+                                    {open.mangaData.map(item =>{
+                                        return(
+                                        <LazyLoad>
+                                        <CardMedia component='img' src={item.image} onError={handleImageError}/>
+                                        </LazyLoad>
+                                    )})}
+                                    
+                                </Grid>
+                            </Grid>
+                            )}
+                            
+
+                    </Dialog>
                     </Grid>
                 </Grid>
             )}
@@ -231,5 +429,9 @@ export default function MangaChapter() {
         </div>
     )
 }
+
+
+
+
 
 

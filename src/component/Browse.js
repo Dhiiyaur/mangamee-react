@@ -108,7 +108,7 @@ export default function Browse() {
                         title="manga title"
                     />
                     <CardContent>
-                        <Typography variant="body2" color="textSecondary" component="p" className={classes.mobileText}>
+                        <Typography noWrap variant="body2" color="textSecondary" component="p" className={classes.mobileText}>
                             {item.name}
                         </Typography>
                     </CardContent>

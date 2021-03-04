@@ -154,7 +154,7 @@ export default function Home() {
         {isLogin && (
 
             <div>
-                <Grid container style={{ marginTop : 70 }} justify='center'>
+                <Grid container style={{ marginTop : 50 }} justify='center'>
                     <Typography variant="body2" color="textSecondary" component="h6">
                             User History
                     </Typography>
@@ -181,7 +181,7 @@ export default function Home() {
                             title="manga title"
                         />
                         <CardContent>
-                            <Typography variant="body2" color="textSecondary" component="p" className={classes.mobileText}>
+                            <Typography noWrap variant="body2" color="textSecondary" component="p" className={classes.mobileText}>
                                 {item.Name}
                             </Typography>
                             <Typography variant="body2" color="textSecondary" component="p" className={classes.mobileText}>
@@ -237,7 +237,7 @@ export default function Home() {
         <div>
             <Container>
                 <MuiThemeProvider theme={theme}>
-                <Grid container spacing={3} m={2} justify='center' style={{ marginTop : 150 }}>
+                <Grid container spacing={3} m={2} justify='center' style={{ marginTop : 125 }}>
                 {/* <Paper variant='outlined' component={Box} p={2}> */}
                 <Typography variant="h4" component="h4" color='textPrimary'>
                     MANGAMEE
