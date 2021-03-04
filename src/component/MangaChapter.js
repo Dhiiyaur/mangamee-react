@@ -22,12 +22,11 @@ import {
     Button,
     Dialog,
     AppBar,
-    Toolbar
+    Toolbar,
+    TextField
 
  } from '@material-ui/core'
 
-import useScrollTrigger from "@material-ui/core/useScrollTrigger";
-import Slide from "@material-ui/core/Slide";
 
 import {MuiThemeProvider, createMuiTheme } from '@material-ui/core'
 import IconButton from '@material-ui/core/IconButton';
@@ -68,7 +67,6 @@ export default function MangaChapter() {
         summary     : null
     })
     
-
     const theme = createMuiTheme({
         palette:{
 
@@ -76,6 +74,13 @@ export default function MangaChapter() {
         }
 
     })
+
+    // fillter function
+    const [fillterChapter, setFillterChapter] = useState("")
+
+    const handleFilterChapter = (e) => {
+        setFillterChapter(e.target.value);
+    };
 
     function FetchManga() {
         
@@ -198,7 +203,7 @@ export default function MangaChapter() {
 
     // manga func  ---------------------------------------------------------------------------------
 
-    const trigger = useScrollTrigger();
+
     const [open, setOpen] = useState({
 
         mangaIndex : null,
@@ -320,7 +325,7 @@ export default function MangaChapter() {
                 isModalOpen : true,
                 mangaData : [],
             })
-            
+
             id = id - 1
             settempMangaID(id)
             // console.log(id)
@@ -373,16 +378,43 @@ export default function MangaChapter() {
                             </Typography>
                             <br />
                             <Divider />
-                            <List>
-                                {chapter.map((item, index) => (
-                        
-                                    <ListItem button>
-                                        <ListItemText style={{ color: '#FFFFFF' }} 
-                                                      primary={item.chapter_name} 
-                                                      onClick={e => handleClickOpen(index)}/>
-                                    </ListItem>
 
+                            <br />
+                            <form>
+
+                            <TextField id="outlined-basic" 
+                                       label="Search Chapter" 
+                                       variant="outlined" 
+                                       fullWidth
+                                       onChange={handleFilterChapter}/>
+
+                            </form>
+                            <br />
+                            <List>
+
+                                {chapter.filter((item) =>{
+                                    if (fillterChapter == "") {
+                                        return item
+                                    } else if (
+                                        item.chapter_name.toLowerCase().includes(fillterChapter.toLocaleLowerCase())
+                                    ) {
+                                        return item
+                                    }
+                                }).map((item, index) => (
+                                        <ListItem button>
+                                            <ListItemText style={{ color: '#FFFFFF' }} 
+                                                        primary={item.chapter_name} 
+                                                        onClick={e => handleClickOpen(index)}/>
+                                        </ListItem>
                                 ))}
+
+                                {/* {chapter.map((item, index) => (
+                                        <ListItem button>
+                                            <ListItemText style={{ color: '#FFFFFF' }} 
+                                                        primary={item.chapter_name} 
+                                                        onClick={e => handleClickOpen(index)}/>
+                                        </ListItem>
+                                ))} */}
 
                             </List>   
                         </CardContent>
@@ -390,24 +422,23 @@ export default function MangaChapter() {
                     </Card>
                     
                     <Dialog fullScreen open={open.isModalOpen} onClose={handleClose}>
-                        {/* <Slide appear={false} direction="down" in={!trigger}> */}
-                            <AppBar style={{ background: '#2E3B55' }}>
-                            <Toolbar variant="dense">
-                                <IconButton edge="start" color="inherit" onClick={handleClose} aria-label="close">
-                                <CloseIcon />
-                                </IconButton>
-                                <Typography noWrap variant="h6" className={classes.title}>
-                                    {chapter[tempMangaID].chapter_name}
-                                </Typography>
-                                <Button autoFocus color="inherit" onClick={e => handlePrev()} className={classes.mobileText}>
-                                Prev
-                                </Button>
-                                <Button autoFocus color="inherit" onClick={e => handleNext()} className={classes.mobileText}>
-                                Next
-                                </Button>
-                            </Toolbar>
-                            </AppBar>
-                        {/* </Slide> */}
+  
+                        <AppBar style={{ background: '#2E3B55' }}>
+                        <Toolbar variant="dense">
+                            <IconButton edge="start" color="inherit" onClick={handleClose} aria-label="close">
+                            <CloseIcon />
+                            </IconButton>
+                            <Typography noWrap variant="h6" className={classes.title}>
+                                {chapter[tempMangaID].chapter_name}
+                            </Typography>
+                            <Button autoFocus color="inherit" onClick={e => handlePrev()} className={classes.mobileText}>
+                            Prev
+                            </Button>
+                            <Button autoFocus color="inherit" onClick={e => handleNext()} className={classes.mobileText}>
+                            Next
+                            </Button>
+                        </Toolbar>
+                        </AppBar>
 
                             {loadingManga ? (
                                 <Grid container spacing={3} m={2} justify='center' style={{ marginTop : 200 }}>
