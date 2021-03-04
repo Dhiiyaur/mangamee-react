@@ -61,7 +61,7 @@ export default function Search() {
     const [loading, setLoading] = useState(false)
     const [notFound, setnotFound] = useState(false)
     const [langOption, setLangOption] = useState('EN');
-    const { handleSubmit, control, errors: fieldsErrors, reset } = useForm();
+    const { handleSubmit, control } = useForm();
 
     const theme = createMuiTheme({
         palette:{
@@ -81,7 +81,7 @@ export default function Search() {
             }
         })
         .then((res) =>{
-            console.log(res.data.length);
+            // console.log(res.data.length);
             if(res.data.length !== 0){
                 setSearchResult(res.data);
                 setLoading(false)
@@ -99,8 +99,9 @@ export default function Search() {
 
     const onSubmitLogin = data => {
 
-        console.log(data)
-        console.log(langOption)
+        // console.log(data)
+        // console.log(langOption)
+        setSearchResult([])
         setLoading(true)
         setnotFound(false)
         fetchData(data.title_manga, langOption);
@@ -158,69 +159,80 @@ export default function Search() {
                 </Container>
 
             
-                {loading && (
+                {loading ? (
 
                     <Grid container spacing={3} m={2} justify='center' style={{ marginTop : 50 }}>
                     <CircularProgress color="secondary"/>
                     </Grid>
 
-                )}
-
-                {!loading && (
+                ) : (
 
                     <div>
-                    {!notFound &&(
-
-                        <Grid container spacing={3} m={2} justify='center' style={{ marginTop : 50 }}>
-                        {searchResult.map(item =>{
-                            return(
-                            
-                            <Grid item lg={2} xs={4}>
-                                    <Card className={classes.root} style={{ height: '100%' }}>
-                                        <div onClick={() => {
-                                        
-                                            let MangeName = item.name
-                                            let date = new Date(2030, 12)
-                                            cookies.set("Mangamee_Temp_Name", MangeName, { path: "/", expires: date })
-                                    
-                                        }}>
-                                        <CardActionArea>
-                                        <Link underline='none' component={RouterLink} to={`/${langOption}/${item.link}`}>
-                                        <CardMedia
-                                            component="img"
-                                            alt=" "
-                                            height="180"
-                                            src={item.thumbnail_image}
-                                            title="manga title"
-                                        />
-                                        <CardContent>
-                                            <Typography noWrap variant="body2" color="textPrimary" component="p" className={classes.mobileText}>
-                                                {item.name}
-                                            </Typography>
-                                            <br/>
-                                            <Typography variant="body2" color="textSecondary" component="p" className={classes.mobileText}>
-                                                {item.latest_chapter} chapter - {item.status}
-                                            </Typography>
-                                        </CardContent>
-                                        </Link>
-                                        </CardActionArea>
-                                        </div>
-                                    </Card>
-                            </Grid> 
-                        )})}
-                        </Grid>
-                    )}
-                    
-                    {notFound &&(
+                    {notFound ? (
+                        
                         <Grid container spacing={3} m={2} justify='center' style={{ marginTop : 50 }}>
                         <Typography variant="h6" color="textPrimary" component="h6">
                             Not Found
                         </Typography>
                         </Grid>
 
+                    ) : (
+
+                        <Grid container spacing={3} m={2} justify='center' style={{ marginTop : 50 }}>
+                            {searchResult.map(item =>{
+                            return(
+                                <Grid item lg={2} xs={4}>
+                                        <Card className={classes.root} style={{ height: '100%' }}>
+                                            <div onClick={() => {
+                                            
+                                                let MangeName = item.name
+                                                let date = new Date(2030, 12)
+                                                cookies.set("Mangamee_Temp_Name", MangeName, { path: "/", expires: date })
+                                        
+                                            }}>
+                                            <CardActionArea>
+                                            <Link underline='none' 
+                                                  component={RouterLink} 
+                                                  to={`/${langOption}/${item.link}`}>
+
+                                            <CardMedia
+                                                component="img"
+                                                alt=" "
+                                                height="180"
+                                                src={item.thumbnail_image}
+                                                title="manga title"
+                                            />
+                                            <CardContent>
+                                                <Typography noWrap 
+                                                            variant="body2" 
+                                                            color="textPrimary" 
+                                                            component="p" 
+                                                            className={classes.mobileText}>
+
+                                                    {item.name}
+                                                </Typography>
+                                                <br/>
+                                                <Typography variant="body2" 
+                                                            color="textSecondary" 
+                                                            component="p" 
+                                                            className={classes.mobileText}>
+                                                                
+                                                    {item.latest_chapter} chapter - {item.status}
+                                                </Typography>
+                                            </CardContent>
+                                            </Link>
+                                            </CardActionArea>
+                                            </div>
+                                        </Card>
+                                </Grid> 
+                            )})}
+                        </Grid>
+
                     )}
+
                     </div>
                 )}
+
             </MuiThemeProvider>
             </Container>
         </div>

@@ -54,7 +54,7 @@ export default function SignUp() {
     const onSubmitRegister = data => {
 
         // console.log(data)
-        if(data.password1 != data.password2){
+        if(data.password1 !== data.password2){
         
             setformError(true)
         }

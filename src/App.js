@@ -3,7 +3,7 @@ import Navbar from "./component/Navbar";
 import Browse from "./component/Browse";
 import Search from "./component/Search";
 import MangaChapter from "./component/MangaChapter"
-import Manga from "./component/Manga"
+// import Manga from "./component/Manga"
 import Home from "./component/Home"
 import SignIn from "./component/SignIn";
 import SignUp from "./component/SignUp";
@@ -23,7 +23,7 @@ function App() {
           <Route path="/browse" exact component={Browse} />
           <Route path="/search" exact component={Search} />
           <Route path='/:lang/:manga_tile' exact component={MangaChapter} />
-          <Route path='/:lang/:manga_tile/:chapter' exact component={Manga} />
+          {/* <Route path='/:lang/:manga_tile/:chapter' exact component={Manga} /> */}
         </Switch>
       </div>
     </Router>

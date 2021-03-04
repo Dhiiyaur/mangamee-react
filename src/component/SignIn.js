@@ -45,7 +45,7 @@ const useStyles = makeStyles((theme) => ({
 export default function SignIn() {
 
     const classes = useStyles();
-    const { handleSubmit, control, errors: fieldsErrors, reset } = useForm();
+    const { handleSubmit, control } = useForm();
     const [loginError, setloginError] = useState(false)
     const cookies = new Cookies()
 

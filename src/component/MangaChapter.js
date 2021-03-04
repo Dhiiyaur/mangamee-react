@@ -18,27 +18,23 @@ import {
     List,
     ListItemText,
     Divider,
-    CircularProgress
+    CircularProgress,
+    Button,
+    Dialog,
+    AppBar,
+    Toolbar
 
  } from '@material-ui/core'
 
+import useScrollTrigger from "@material-ui/core/useScrollTrigger";
+import Slide from "@material-ui/core/Slide";
+
 import {MuiThemeProvider, createMuiTheme } from '@material-ui/core'
-
-// test server
-
-import Button from '@material-ui/core/Button';
-import Dialog from '@material-ui/core/Dialog';
-import AppBar from '@material-ui/core/AppBar';
-import Toolbar from '@material-ui/core/Toolbar';
 import IconButton from '@material-ui/core/IconButton';
 import CloseIcon from '@material-ui/icons/Close';
-import Slide from '@material-ui/core/Slide';
 
-
-// test
 
 const cookies = new Cookies()
-
 const useStyles = makeStyles((theme) => ({
     appBar: {
       position: 'relative',
@@ -46,16 +42,28 @@ const useStyles = makeStyles((theme) => ({
     title: {
       marginLeft: theme.spacing(2),
       flex: 1,
+      [theme.breakpoints.down("xs")]: {
+        fontSize: 14
+    }
+
     },
+    mobileText:{
+
+        [theme.breakpoints.down("xs")]: {
+            fontSize: 12
+        }
+    }
   }));
 
 export default function MangaChapter() {
+
 
     const classes = useStyles();
     const { lang, manga_tile } = useParams()
     const [loading, setLoading] = useState(true)
     const [chapter, setChapter] = useState([])
     const [info, setInfo] = useState({
+        
         cover_img   : null,
         summary     : null
     })
@@ -118,20 +126,15 @@ export default function MangaChapter() {
 
         // console.log(userToken)
 
-        if(userToken != undefined){
+        if(userToken !== undefined){
 
 
-            if(tempHistory == undefined){
+            if(tempHistory === undefined){
 
-                // creaate his
-                // console.log('ga ada history')
                 CreateCookies(coverImg)
 
             }else{
 
-                // update history
-                // console.log('ada history')
-                // console.log(tempHistory)
                 UpdateCookies(tempHistory, coverImg)
                    
             }    
@@ -192,14 +195,12 @@ export default function MangaChapter() {
         }
     }
 
+
     // manga func  ---------------------------------------------------------------------------------
 
-    const Transition = React.forwardRef(function Transition(props, ref) {
-        return <Slide direction="up" ref={ref} {...props} />;
-      });
-
-
+    const trigger = useScrollTrigger();
     const [open, setOpen] = useState({
+
         mangaIndex : null,
         mangaData : [],
         isModalOpen : false
@@ -237,21 +238,18 @@ export default function MangaChapter() {
 
         // get data
         let MangaID = manga_tile
-        console.log(tempMangaID)
         let lastChapter = chapter[tempID].chapter_name
-        console.log(lastChapter)
         let TempHistory = cookies.get("Mangamee_Temp_History");
 
 
         // update chapter .map cookies
-        if(TempHistory != undefined){
+        if(TempHistory !== undefined){
 
             let newChapter = TempHistory.map(obj =>
                 obj.ID === MangaID ? { ...obj, LatestRead: lastChapter } : obj
             );
         
             // jsonvalue
-            console.log(newChapter)
             let date = new Date(2030, 12)
             cookies.set("Mangamee_Temp_History", newChapter, { path: "/", expires: date })
             UpdateDbUser(newChapter)
@@ -268,9 +266,7 @@ export default function MangaChapter() {
 
     const handleClickOpen = (id) => {
 
-        // console.log(chapter[id])
-        // console.log(chapter[id].chapter_name)
-
+        
         let tempID = id
         settempMangaID(tempID)
         fecthManga(tempID)
@@ -290,13 +286,17 @@ export default function MangaChapter() {
 
     const handlePrev = () => {
 
-        console.log('prev')
         setloadingManga(true)
         let id = tempMangaID
         // check with length chapter
         if(id !== (chapter.length -1)){
 
-            
+            setOpen({
+
+                mangaIndex : null,
+                isModalOpen : true,
+                mangaData : [],
+            })
             id = id + 1
             settempMangaID(id)
             // console.log(id)
@@ -309,11 +309,18 @@ export default function MangaChapter() {
 
     const handleNext = () => {
 
-        console.log('nrext')
         setloadingManga(true)
+
         let id = tempMangaID
         if(id !== 0){
 
+            setOpen({
+
+                mangaIndex : null,
+                isModalOpen : true,
+                mangaData : [],
+            })
+            
             id = id - 1
             settempMangaID(id)
             // console.log(id)
@@ -338,13 +345,12 @@ export default function MangaChapter() {
             <MuiThemeProvider theme={theme}>
             <Container>
 
-            {loading && (
+            {loading ? (
                 <Grid container spacing={3} m={2} justify='center' style={{ marginTop : 150 }}>
                     <CircularProgress color="secondary"/>
                 </Grid>
-            )}
 
-            {!loading && (
+            ):(
 
                 <Grid container spacing={3} m={2} justify='center' style={{ marginTop : 100 }}>
                     <Grid item lg={8} xs={12}>
@@ -370,9 +376,11 @@ export default function MangaChapter() {
                             <List>
                                 {chapter.map((item, index) => (
                         
-                                        <ListItem button>
-                                            <ListItemText style={{ color: '#FFFFFF' }} primary={item.chapter_name} onClick={e => handleClickOpen(index)}/>
-                                        </ListItem>
+                                    <ListItem button>
+                                        <ListItemText style={{ color: '#FFFFFF' }} 
+                                                      primary={item.chapter_name} 
+                                                      onClick={e => handleClickOpen(index)}/>
+                                    </ListItem>
 
                                 ))}
 
@@ -382,32 +390,33 @@ export default function MangaChapter() {
                     </Card>
                     
                     <Dialog fullScreen open={open.isModalOpen} onClose={handleClose}>
-                        <AppBar>
-                        <Toolbar>
-                            <IconButton edge="start" color="inherit" onClick={handleClose} aria-label="close">
-                            <CloseIcon />
-                            </IconButton>
-                            <Typography variant="h6" className={classes.title}>
-                                {chapter[tempMangaID].chapter_name}
-                            </Typography>
-                            <Button autoFocus color="inherit" onClick={e => handlePrev()}>
-                            Prev
-                            </Button>
-                            <Button autoFocus color="inherit" onClick={e => handleNext()}>
-                            Next
-                            </Button>
-                        </Toolbar>
-                        </AppBar>
+                        {/* <Slide appear={false} direction="down" in={!trigger}> */}
+                            <AppBar style={{ background: '#2E3B55' }}>
+                            <Toolbar variant="dense">
+                                <IconButton edge="start" color="inherit" onClick={handleClose} aria-label="close">
+                                <CloseIcon />
+                                </IconButton>
+                                <Typography noWrap variant="h6" className={classes.title}>
+                                    {chapter[tempMangaID].chapter_name}
+                                </Typography>
+                                <Button autoFocus color="inherit" onClick={e => handlePrev()} className={classes.mobileText}>
+                                Prev
+                                </Button>
+                                <Button autoFocus color="inherit" onClick={e => handleNext()} className={classes.mobileText}>
+                                Next
+                                </Button>
+                            </Toolbar>
+                            </AppBar>
+                        {/* </Slide> */}
 
-                            {loadingManga && (
-                                <Grid container spacing={3} m={2} justify='center' style={{ marginTop : 150 }}>
-                                <CircularProgress color="secondary"/>
+                            {loadingManga ? (
+                                <Grid container spacing={3} m={2} justify='center' style={{ marginTop : 200 }}>
+                                    <CircularProgress color="secondary"/>
                                 </Grid>
-                            )}
+                            ) : (
 
-                            {!loadingManga && (
-                            <Grid container spacing={3} m={2} justify='center' style={{ marginTop : 100 }}>
-                                <Grid item lg={8} xs={12}>
+                                <Grid container spacing={3} m={2} justify='center' style={{ marginTop : 50 }}>
+                                <Grid item lg={7} xs={12}>
                                     {open.mangaData.map(item =>{
                                         return(
                                         <LazyLoad>
@@ -416,9 +425,9 @@ export default function MangaChapter() {
                                     )})}
                                     
                                 </Grid>
-                            </Grid>
-                            )}
-                            
+                                </Grid>    
+
+                            )  }
 
                     </Dialog>
                     </Grid>

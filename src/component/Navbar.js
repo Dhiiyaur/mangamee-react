@@ -12,7 +12,6 @@ import {
 
 import AccountCircle from '@material-ui/icons/AccountCircle';
 import SearchIcon from '@material-ui/icons/Search';
-import MoreIcon from '@material-ui/icons/MoreVert';
 import MenuIcon from '@material-ui/icons/Menu';
 import MenuBookIcon from '@material-ui/icons/MenuBook';
 import HomeIcon from '@material-ui/icons/Home';
@@ -94,7 +93,7 @@ export default function PrimarySearchAppBar() {
     let userToken = cookies.get("Mangamee_Login_Token");
     // console.log(cookies.get("Mangamee_Login_Token"))
 
-    if(userToken != undefined){
+    if(userToken !== undefined){
 
       setisLoggedIn(true)
 
@@ -131,21 +130,19 @@ export default function PrimarySearchAppBar() {
     >
 
 
-      {isLoggedIn && (
+      {isLoggedIn ? (
 
           <MenuItem onClick={deleteToken}>
           logout 
           </MenuItem>
+      ): ( 
+
+        <MenuItem onClick={() => { window.location.href='/auth/signin'}}>
+        login  
+        </MenuItem>
+
       )}
 
-      {!isLoggedIn && (
-
-          <MenuItem onClick={() => { window.location.href='/auth/signin'}}>
-          login  
-          </MenuItem>
-      )}
-
-    
     </Menu>
   );
 

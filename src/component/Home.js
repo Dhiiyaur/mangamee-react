@@ -75,7 +75,7 @@ export default function Home() {
         })
         .then((res) => {
             
-            console.log(res.status)
+            // console.log(res.status)
             if(res.status === 200){
 
                 window.location.href='/'
@@ -96,7 +96,7 @@ export default function Home() {
         })
         .then((res) => {
             
-            console.log(res.status)
+            // console.log(res.status)
             if(res.status === 200){
 
                 window.location.href='/'
@@ -111,7 +111,7 @@ export default function Home() {
         // console.log(cookies.get("Mangamee_Login_Token"))
         // console.log(userToken)
     
-        if(userToken != undefined){
+        if(userToken !== undefined){
     
             fetchHistory(userToken);
             setisLogin(true)
@@ -131,7 +131,7 @@ export default function Home() {
 
             // console.log(res.data.history)
             // console.log(res.data)
-            if(res.data.history != null){
+            if(res.data.history !== null){
 
                 setUserHistory(res.data.history)
                 let date = new Date(2030, 12)
@@ -147,6 +147,16 @@ export default function Home() {
     
     
       }
+      
+    const homeTitle = (
+        <div>
+        <Grid container spacing={3} m={2} justify='center' style={{ marginTop : 125 }}>
+            <Typography variant="h4" component="h4" color='textPrimary'>
+                MANGAMEE
+            </Typography>
+        </Grid>
+        </div>
+    )
 
     const userHistoryCard = (
 
@@ -159,6 +169,7 @@ export default function Home() {
                             User History
                     </Typography>
                 </Grid>
+
                 <Grid 
                     container 
                     spacing={3} m={2}
@@ -181,10 +192,20 @@ export default function Home() {
                             title="manga title"
                         />
                         <CardContent>
-                            <Typography noWrap variant="body2" color="textSecondary" component="p" className={classes.mobileText}>
+                            <Typography noWrap 
+                                        variant="body2" 
+                                        color="textSecondary" 
+                                        component="p" 
+                                        className={classes.mobileText}>
+
                                 {item.Name}
                             </Typography>
-                            <Typography variant="body2" color="textSecondary" component="p" className={classes.mobileText}>
+                            <Typography variant="body2" 
+                                        color="textSecondary" 
+                                        component="p" 
+                                        className={classes.mobileText}>
+
+
                                 {item.LatestRead}
                             </Typography>
                         </CardContent>
@@ -200,7 +221,7 @@ export default function Home() {
                                 let date = new Date(2030, 12)
                                 // filter with mangaNameCookies
 
-                                if(tempHistory.length == 1){
+                                if(tempHistory.length === 1){
 
                                     cookies.remove("Mangamee_Temp_History" ,{ path: '/' })
                                     DeleteDbUser()
@@ -209,7 +230,7 @@ export default function Home() {
                             
                                 }else{
                             
-                                    let cookiesFilter = tempHistory.filter((item) => item.ID != mangaIDCookies);
+                                    let cookiesFilter = tempHistory.filter((item) => item.ID !== mangaIDCookies);
                                     // console.log(cookiesFilter)
                                     cookies.set("Mangamee_Temp_History", cookiesFilter, { path: "/", expires: date })
                                     UpdateDbUser(cookiesFilter)
@@ -218,7 +239,10 @@ export default function Home() {
                             
                                 }
                             }}>
-                            <Button size="small" color="secondary" className={classes.mobileText}>
+                            <Button size="small" 
+                                    color="secondary" 
+                                    className={classes.mobileText}>
+                                        
                                 Delete
                             </Button>
                             </div>
@@ -233,18 +257,14 @@ export default function Home() {
         </div>
     )
 
+
+
+
     return (
         <div>
             <Container>
                 <MuiThemeProvider theme={theme}>
-                <Grid container spacing={3} m={2} justify='center' style={{ marginTop : 125 }}>
-                {/* <Paper variant='outlined' component={Box} p={2}> */}
-                <Typography variant="h4" component="h4" color='textPrimary'>
-                    MANGAMEE
-                </Typography>
-                {/* </Paper> */}
-                </Grid>
-                
+                {homeTitle}
                 {userHistoryCard}
                 </MuiThemeProvider>
             </Container>
