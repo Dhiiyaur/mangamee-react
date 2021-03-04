@@ -378,10 +378,8 @@ export default function MangaChapter() {
                             </Typography>
                             <br />
                             <Divider />
-
                             <br />
                             <form>
-
                             <TextField id="outlined-basic" 
                                        label="Search Chapter" 
                                        variant="outlined" 
@@ -391,7 +389,6 @@ export default function MangaChapter() {
                             </form>
                             <br />
                             <List>
-
                                 {chapter.filter((item) =>{
                                     if (fillterChapter == "") {
                                         return item
