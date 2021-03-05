@@ -51,7 +51,12 @@ const useStyles = makeStyles((theme) => ({
         "&.Mui-selected": {
           backgroundColor: "red"
         }
-      }
+    },
+    input: {
+        '& label.Mui-focused': {
+            color: '#FFFFFF'
+          },
+    },
   }));
   
 export default function Search() {
@@ -129,7 +134,7 @@ export default function Search() {
                             id="title_manga"
                             label="Manga Title"
                             name="title_manga"
-                            autoFocus      
+                            className={classes.input}
                         />
                     }
                         control={control}

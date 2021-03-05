@@ -35,6 +35,11 @@ const useStyles = makeStyles((theme) => ({
     submit: {
       margin: theme.spacing(3, 0, 2),
     },
+    input: {
+        '& label.Mui-focused': {
+            color: '#FFFFFF'
+          },
+    },
   }));
 
 export default function SignUp() {
@@ -103,7 +108,7 @@ export default function SignUp() {
                                 label="User Name"
                                 name="username"
                                 // autoComplete="username"
-                                autoFocus
+                                className={classes.input}
                             />
                     }
 
@@ -127,7 +132,7 @@ export default function SignUp() {
                             label="Email Address"
                             name="email"
                             autoComplete="email"
-                            autoFocus
+                            className={classes.input}
                         />
                     
                     }
@@ -157,6 +162,7 @@ export default function SignUp() {
                             label="password"
                             type="password"
                             id="password1"
+                            className={classes.input}
                             
                         />
                     }
@@ -179,6 +185,7 @@ export default function SignUp() {
                             label="confirm-password"
                             type="password"
                             id="password2"
+                            className={classes.input}
                             
                         />
                     }

@@ -43,15 +43,21 @@ const useStyles = makeStyles((theme) => ({
       flex: 1,
       [theme.breakpoints.down("xs")]: {
         fontSize: 14
-    }
-
+        }
     },
     mobileText:{
-
         [theme.breakpoints.down("xs")]: {
             fontSize: 12
         }
-    }
+    },
+    input: {
+        '& label.Mui-focused': {
+            color: '#FFFFFF'
+          },
+    },
+    notchedOutline: {
+        borderColor: "#FFFFFF !important"
+      }
   }));
 
 export default function MangaChapter() {
@@ -384,7 +390,13 @@ export default function MangaChapter() {
                                        label="Search Chapter" 
                                        variant="outlined" 
                                        fullWidth
-                                       onChange={handleFilterChapter}/>
+                                       onChange={handleFilterChapter}
+                                       className={classes.input}
+                                       InputProps={{
+                                        classes: {
+                                          notchedOutline: classes.notchedOutline
+                                        }
+                                      }}/>
 
                             </form>
                             <br />
