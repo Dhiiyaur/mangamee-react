@@ -62,25 +62,26 @@ export default function SignUp() {
         if(data.password1 !== data.password2){
         
             setformError(true)
+        } else {
+
+            axios.post(apiRegister,{
+
+                username : data.username,
+                email    : data.email,
+                password : data.password1
+            })
+    
+            .then((res) => {
+                // console.log(res.data)
+                window.location.href='/auth/signin/'
+    
+            })
+    
+            .catch(error => {
+                // console.log(error.response)
+                setRegisterError(true)
+            })
         }
-
-        axios.post(apiRegister,{
-
-            username : data.username,
-            email    : data.email,
-            password : data.password1
-        })
-
-        .then((res) => {
-            // console.log(res.data)
-            window.location.href='/auth/signin/'
-
-        })
-
-        .catch(error => {
-            // console.log(error.response)
-            setRegisterError(true)
-        })
     } 
 
     return (
