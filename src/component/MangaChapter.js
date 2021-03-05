@@ -240,9 +240,11 @@ export default function MangaChapter() {
                     
                 })
         })
+    }
 
-        
+    function getIndex(chapter_name) {
 
+        return chapter.findIndex(item => item.link === chapter_name);
     }
 
     function updateCookiesChapter(tempID){
@@ -275,10 +277,9 @@ export default function MangaChapter() {
         e.target.src = " "
     }
 
-    const handleClickOpen = (id) => {
+    const handleClickOpen = (link) => {
 
-        
-        let tempID = id
+        let tempID = getIndex(link)
         settempMangaID(tempID)
         fecthManga(tempID)
         updateCookiesChapter(tempID)
@@ -413,7 +414,7 @@ export default function MangaChapter() {
                                         <ListItem button>
                                             <ListItemText style={{ color: '#FFFFFF' }} 
                                                         primary={item.chapter_name} 
-                                                        onClick={e => handleClickOpen(index)}/>
+                                                        onClick={e => handleClickOpen(item.link)}/>
                                         </ListItem>
                                 ))}
 
