@@ -1,7 +1,7 @@
-import React, { useState } from 'react'
-import { apiSearch } from "../endpoint";
+import React, { useState, useEffect } from 'react'
+import { apiSearch } from "../config/endpoint";
 import axios from 'axios';
-import { Link as RouterLink } from "react-router-dom"
+import { Link as RouterLink, useParams } from "react-router-dom"
 import { makeStyles } from '@material-ui/core/styles';
 import Cookies from 'universal-cookie';
 
@@ -26,7 +26,7 @@ import { useForm, Controller } from 'react-hook-form';
 
 import {MuiThemeProvider, createMuiTheme } from '@material-ui/core'
 
-const cookies = new Cookies()
+
 const useStyles = makeStyles((theme) => ({
     paper: {
       marginTop: theme.spacing(0),
@@ -62,6 +62,8 @@ const useStyles = makeStyles((theme) => ({
 export default function Search() {
 
     const classes = useStyles();
+    const { lang, title } = useParams()
+    const cookies = new Cookies()
     const [searchResult, setSearchResult] = useState([])
     const [loading, setLoading] = useState(false)
     const [notFound, setnotFound] = useState(false)
@@ -104,8 +106,6 @@ export default function Search() {
 
     const onSubmitLogin = data => {
 
-        // console.log(data)
-        // console.log(langOption)
         setSearchResult([])
         setLoading(true)
         setnotFound(false)
@@ -113,6 +113,16 @@ export default function Search() {
         
     }
 
+    useEffect(() => {
+
+        if(lang === "EN" || lang === "ID"){
+
+            setLoading(true)
+            setnotFound(false)
+            fetchData(title, lang);
+        }    
+
+    }, [])
 
     return (
         <div>

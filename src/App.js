@@ -21,9 +21,9 @@ function App() {
           <Route path="/auth/signin" exact component={SignIn} />
           <Route path="/auth/signup" exact component={SignUp} />
           <Route path="/browse" exact component={Browse} />
-          <Route path="/search" exact component={Search} />
+          <Route path="/search" excat component={Search} />
+          <Route path="/search2/:lang/:title" component={Search} />
           <Route path='/:lang/:manga_tile' exact component={MangaChapter} />
-          {/* <Route path='/:lang/:manga_tile/:chapter' exact component={Manga} /> */}
         </Switch>
       </div>
     </Router>

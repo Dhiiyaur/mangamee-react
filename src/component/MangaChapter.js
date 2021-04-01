@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { apiManga, apiUpdateHistory, apiPage } from "../endpoint";
+import { apiManga, apiUpdateHistory, apiPage } from "../config/endpoint";
 import axios from 'axios'
 import { useParams } from "react-router-dom"
 import Cookies from 'universal-cookie';
@@ -403,7 +403,7 @@ export default function MangaChapter() {
                             <br />
                             <List>
                                 {chapter.filter((item) =>{
-                                    if (fillterChapter == "") {
+                                    if (fillterChapter === "") {
                                         return item
                                     } else if (
                                         item.chapter_name.toLowerCase().includes(fillterChapter.toLocaleLowerCase())

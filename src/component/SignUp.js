@@ -1,6 +1,6 @@
 import React, { useState} from 'react'
 import axios from 'axios';
-import { apiRegister } from "../endpoint";
+import { apiRegister } from "../config/endpoint";
 
 import { 
     Avatar,
@@ -16,6 +16,7 @@ import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import { makeStyles } from '@material-ui/core/styles';
 import { useForm, Controller } from 'react-hook-form';
 import {MuiThemeProvider, createMuiTheme } from '@material-ui/core'
+import { useHistory } from 'react-router-dom'
 
 const useStyles = makeStyles((theme) => ({
     paper: {
@@ -48,6 +49,7 @@ export default function SignUp() {
     const { handleSubmit, control } = useForm();
     const [formError, setformError] = useState(false)
     const [registerError, setRegisterError] = useState(false)
+    const history = useHistory();
 
     const theme = createMuiTheme({
         palette:{
@@ -73,7 +75,7 @@ export default function SignUp() {
     
             .then((res) => {
                 // console.log(res.data)
-                window.location.href='/auth/signin/'
+                history.push("/auth/signin")
     
             })
     
