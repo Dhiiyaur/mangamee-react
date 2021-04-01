@@ -20,7 +20,7 @@ import Slide from "@material-ui/core/Slide";
 
 import {MuiThemeProvider, createMuiTheme } from '@material-ui/core'
 import Cookies from 'universal-cookie';
-
+import { useHistory } from 'react-router-dom'
 
 const useStyles = makeStyles((theme) => ({
   grow: {
@@ -49,12 +49,13 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 
-const cookies = new Cookies()
 
 export default function PrimarySearchAppBar() {
 
   const trigger = useScrollTrigger();
+  const cookies = new Cookies()
   const classes = useStyles();
+  const history = useHistory();
   const [anchorEl, setAnchorEl] = React.useState(null);
   const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = React.useState(null);
 
@@ -137,7 +138,8 @@ export default function PrimarySearchAppBar() {
           </MenuItem>
       ): ( 
 
-        <MenuItem onClick={() => { window.location.href='/auth/signin'}}>
+        // <MenuItem onClick={() => { window.location.href='/auth/signin'}}>
+        <MenuItem onClick={() => history.push('/auth/signin')}>
         login  
         </MenuItem>
 
@@ -158,7 +160,8 @@ export default function PrimarySearchAppBar() {
       onClose={handleMobileMenuClose}
     >
         <MenuItem onClick={() => {
-							        window.location.href='/'
+							        // window.location.href='/'
+                      history.push("/")
 						          }}>
         <IconButton color="inherit">
             <HomeIcon />
@@ -166,7 +169,8 @@ export default function PrimarySearchAppBar() {
         <p>Home</p>
       </MenuItem>
       <MenuItem onClick={() => {
-							        window.location.href='/browse'
+							        // window.location.href='/browse'
+                      history.push("/browse")
 						          }}>
         <IconButton color="inherit">
             <MenuBookIcon />
@@ -174,7 +178,8 @@ export default function PrimarySearchAppBar() {
         <p>Browse Manga</p>
       </MenuItem>
       <MenuItem onClick={() => {
-							        window.location.href='/search'
+							        // window.location.href='/search'
+                      history.push("/search")
 						          }}>
         <IconButton color="inherit">
             <SearchIcon />
@@ -216,19 +221,22 @@ export default function PrimarySearchAppBar() {
             <IconButton color="inherit">
                 <HomeIcon 
                     onClick={() => {
-							        window.location.href='/'
+							        // window.location.href='/'
+                      history.push("/")
 						      }}/>
             </IconButton>
             <IconButton color="inherit">
                 <MenuBookIcon 
                     onClick={() => {
-							        window.location.href='/browse'
+							        // window.location.href='/browse'
+                      history.push("/browse")
 						      }}/>
             </IconButton>
             <IconButton color="inherit">
                 <SearchIcon 
                     onClick={() => {
-							        window.location.href='/search'
+							        // window.location.href='/search'
+                      history.push("/search")
 						          }}/>
             </IconButton>
             <IconButton

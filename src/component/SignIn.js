@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import axios from 'axios';
-import { apiLogin } from "../endpoint";
+import { apiLogin } from "../config/endpoint";
 
 import { 
     Avatar,
@@ -8,8 +8,6 @@ import {
     CssBaseline,
     Container,
     TextField,
-    Link,
-    Grid,
     Typography,
 
 } from "@material-ui/core";
@@ -18,6 +16,7 @@ import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import { makeStyles } from '@material-ui/core/styles';
 import { useForm, Controller } from 'react-hook-form';
 import Cookies from 'universal-cookie';
+import { Link } from 'react-router-dom'
 
 import {MuiThemeProvider, createMuiTheme } from '@material-ui/core'
 
@@ -169,13 +168,9 @@ export default function SignIn() {
                     Sign In
                 </Button>
 
-                <Grid container>
-                    <Grid item>
-                    <Link href="/auth/signup" variant="body2" color="inherit">
-                        {"Don't have an account? Sign Up"}
-                    </Link>
-                    </Grid>
-                </Grid>
+                <Link style={{ textDecoration: 'none', color: '#FFF'}} to="/auth/signup" color="inherit">
+                        Don't have an account? Sign Up
+                </Link>
                 </form>
             </div>
             </Container>

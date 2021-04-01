@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import axios from 'axios';
-import { apiUpdateHistory, apiGetHistory, apiDeleteHistory } from "../endpoint";
+import { apiUpdateHistory, apiGetHistory, apiDeleteHistory } from "../config/endpoint";
 
 import {
     Grid,
@@ -12,8 +12,12 @@ import {
     Typography,
     Link,
     Button,
+    TextField
 
  } from '@material-ui/core'
+
+import ToggleButton from '@material-ui/lab/ToggleButton';
+import ToggleButtonGroup from '@material-ui/lab/ToggleButtonGroup';
 
 import { Link as RouterLink } from "react-router-dom"
 import Cookies from 'universal-cookie';
@@ -22,7 +26,10 @@ import CardActions from '@material-ui/core/CardActions';
 
 import {MuiThemeProvider} from '@material-ui/core'
 
-const cookies = new Cookies()
+import { useForm, Controller } from 'react-hook-form';
+import { useHistory } from 'react-router-dom'
+
+
 const useStyles = makeStyles((theme) => ({
     paper: {
       marginTop: theme.spacing(6),
@@ -39,6 +46,16 @@ const useStyles = makeStyles((theme) => ({
         [theme.breakpoints.down("xs")]: {
             fontSize: 12
         }
+    },
+    buttonColor: {
+        "&.Mui-selected": {
+          backgroundColor: "red"
+        }
+    },
+    input: {
+        '& label.Mui-focused': {
+            color: '#FFFFFF'
+          },
     }
   }));
 
@@ -47,7 +64,13 @@ export default function Home() {
     const [userHistory, setUserHistory] = useState([])
     const [isLogin, setisLogin] = useState(false)
     const classes = useStyles();
+    const cookies = new Cookies()
 
+    // search
+
+    const [langOption, setLangOption] = useState('EN');
+    const { handleSubmit, control } = useForm();
+    const history = useHistory();
 
     const theme = createMuiTheme({
         palette:{
@@ -62,6 +85,15 @@ export default function Home() {
         tokenCheck();
 
     }, [])
+
+    const handleLangSelect = (newLang) => {
+        setLangOption(newLang);
+    };
+
+    const onSumbitSearch = data => {
+        history.push(`search2/${langOption}/${data.title_manga}`)
+        
+    }
 
     function UpdateDbUser(userHistory) {
 
@@ -155,6 +187,51 @@ export default function Home() {
                 MANGAMEE
             </Typography>
         </Grid>
+        </div>
+    )
+
+    const searchbar = (
+        <div>
+        <Container style={{ marginTop : 75 }}>
+        <form onSubmit={handleSubmit(onSumbitSearch)}>
+            <Controller
+                name='title_manga'
+                as={
+
+                    <TextField
+                    variant="filled"
+                    margin="normal"
+                    required
+                    fullWidth
+                    id="title_manga"
+                    label="Manga Title"
+                    name="title_manga"
+                    className={classes.input}
+                />
+            }
+                control={control}
+                defaultValue=""
+                rules={{
+                    required: 'Required'
+                }}
+
+            />
+
+            <ToggleButtonGroup
+                    value={langOption}
+                    exclusive
+                    onChange={handleLangSelect}
+                    aria-label="lang selected"
+                >
+                <ToggleButton value="EN" aria-label="left aligned" className={classes.buttonColor}>
+                    ENG
+                </ToggleButton>
+                <ToggleButton value="ID" aria-label="centered" className={classes.buttonColor}>
+                    IND
+                </ToggleButton>
+            </ToggleButtonGroup>
+        </form>
+        </Container>
         </div>
     )
 
@@ -265,6 +342,7 @@ export default function Home() {
             <Container>
                 <MuiThemeProvider theme={theme}>
                 {homeTitle}
+                {searchbar}
                 {userHistoryCard}
                 </MuiThemeProvider>
             </Container>
