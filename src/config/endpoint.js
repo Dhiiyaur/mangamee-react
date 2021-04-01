@@ -8,7 +8,8 @@ export const endpoint = `${MangameeBe}${apiURL}`;
 
 // export const endpoint = `${MangameeBeLocal}${apiURL}`;
 
-export const apiBrowse = `${endpoint}/browse/`;
+// export const apiBrowse = `${endpoint}/browse/`;
+export const apiBrowse = `${endpoint}/popular/`;
 export const apiSearch = `${endpoint}/search/`;
 export const apiManga = `${endpoint}/manga/`;
 export const apiPage = `${endpoint}/page/`;
